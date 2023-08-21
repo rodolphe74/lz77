@@ -3,10 +3,11 @@
 #include <time.h>
 #include "lz77.h"
 
+#define VAL_COUNT 1024
+
 int main(int argc, char *argv[])
 {
     // Testing bitfield
-#define VAL_COUNT 1024
     srand(time(NULL));
     BitField bf;
     UCHAR bitsMax[VAL_COUNT];

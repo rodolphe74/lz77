@@ -7,13 +7,17 @@ CFLAGS= -O2 --thomto -DCOMPILER_IS_CMOC
 
 LDFLAGS= -lcmoc-crt-thm
 
-all: tolz floppy
+all: tolz tolzbuf floppy
 
 lz77.o: lz77.c
 	$(CC) $(CFLAGS) -c $<
 	$(CC) -S $(CFLAGS) $<
 
 tolz: lz77.o tolz.c
+	$(CC) $(CFLAGS) -o$@.bin  $^ $(LDFLAGS)
+	$(CC) -S $(CFLAGS)  $^
+
+tolzbuf: lz77.o tolzbuf.c
 	$(CC) $(CFLAGS) -o$@.bin  $^ $(LDFLAGS)
 	$(CC) -S $(CFLAGS)  $^
 

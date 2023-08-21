@@ -121,6 +121,7 @@ Tuple findInDic(UCHAR *input, INT startDicIndex, INT stopDicIndex, INT startAHea
     return t;
 }
 
+// current and soon old method
 INT compress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
 {
     // printf("message size:%d\n", iSize);
@@ -148,6 +149,37 @@ INT compress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
     return outputIdx;
 }
 
+// Under development
+// INT compress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
+// {
+//     memset(output, 0, oSize);   // uber wichtig !
+//     BitField bf;
+//     initBitField(&bf, output);
+//
+//     INT index = 0;
+//     INT dicIndexStart = 0, dicIndexStop = 0;
+//     while (index < iSize) {
+//
+//         dicIndexStart = (index /*- 1*/ -  DIC_SIZE) < 0 ? 0 : (index /*- 1*/ -  DIC_SIZE);
+//         dicIndexStop = index;
+//
+//         Tuple t = {0, 0, 0};
+//         t = findInDic(input, dicIndexStart, dicIndexStop, index, AHEAD_SIZE);
+//
+//         // printf("  t=%d,%d,%c(%d)\n", t.d, t.l, (char) t.c, t.c);
+//
+//         writebits(&bf, t.d, DIC_BIT_SIZE);
+//         writebits(&bf, t.l, AHEAD_BIT_SIZE);
+//         writebits(&bf, t.c, CHAR_BIT_SIZE);
+//
+//         index += 1 + t.l;
+//     }
+//     printf("bf.currentIndex:%d\n", bf.currentIndex);
+//     return bf.currentIndex;
+// }
+
+
+// current and soon old method
 INT uncompress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
 {
     INT inputIdx = 0, outputIdx = 0;
@@ -173,6 +205,35 @@ INT uncompress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
     }
     return outputIdx;
 }
+
+
+// Under development
+// INT uncompress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
+// {
+//     BitField bf;
+//     initBitField(&bf, input);
+//     INT /*inputIdx = 0,*/ outputIdx = 0;
+//     memset(output, 0, oSize);
+//
+//     while (bf.currentIndex < iSize) {
+//
+//         Tuple t;
+//         t.d = (UCHAR) readbits(&bf, DIC_BIT_SIZE);
+//         t.l = (UCHAR) readbits(&bf, AHEAD_BIT_SIZE);
+//         t.c = (UCHAR) readbits(&bf, CHAR_BIT_SIZE);
+//         // printf("  t=%d,%d,%c(%d)\n", t.d, t.l, (char) t.c, t.c);
+//
+//         if (t.d != 0) {
+//             memcpy(output + outputIdx, output + outputIdx - t.d, t.l);
+//             outputIdx += t.l;
+//         }
+//
+//         output[outputIdx++] = t.c;
+//     }
+//     return outputIdx;
+// }
+
+
 
 #ifndef COMPILER_IS_CMOC
 void compressFile(FILE *fin, FILE *fout)

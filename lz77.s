@@ -18,7 +18,7 @@ _compress	EXPORT
 
 *******************************************************************************
 
-* FUNCTION compress(): defined at lz77.c:124
+* FUNCTION compress(): defined at lz77.c:125
 _compress	EQU	*
 * Calling convention: Default
 	PSHS	U
@@ -37,27 +37,27 @@ _compress	EQU	*
 *     -6,U:    2 bytes: dicIndexStart: int
 *     -4,U:    2 bytes: dicIndexStop: int
 *     -2,U:    2 bytes: outputIdx: int
-* Line lz77.c:127: init of variable index
+* Line lz77.c:128: init of variable index
 	CLRA
 	CLRB
 	STD	-8,U		variable index
-* Line lz77.c:128: init of variable dicIndexStart
+* Line lz77.c:129: init of variable dicIndexStart
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-6,U		variable dicIndexStart
-* Line lz77.c:128: init of variable dicIndexStop
+* Line lz77.c:129: init of variable dicIndexStop
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-4,U		variable dicIndexStop
-* Line lz77.c:130: init of variable outputIdx
+* Line lz77.c:131: init of variable outputIdx
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-2,U		variable outputIdx
-* Line lz77.c:131: while
+* Line lz77.c:132: while
 	LBRA	L00089		jump to while condition
 L00088	EQU	*		while body
-* Line lz77.c:133: assignment: =
-* Line lz77.c:133: conditional expression
+* Line lz77.c:134: assignment: =
+* Line lz77.c:134: conditional expression
 	LDD	-8,U		variable index
 	ADDD	#$FFE1		65505
 	CMPD	#0
@@ -72,11 +72,11 @@ L00092	EQU	*
 	ADDD	#$FFE1		65505
 L00093	EQU	*
 	STD	-6,U
-* Line lz77.c:134: assignment: =
+* Line lz77.c:135: assignment: =
 * optim: stripConsecutiveLoadsToSameReg
 	LDD	-8,U
 	STD	-4,U
-* Line lz77.c:138: init of variable t
+* Line lz77.c:139: init of variable t
 	CLRA
 	CLRB
 	STB	-16,U		offset in variable t
@@ -86,8 +86,8 @@ L00093	EQU	*
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STB	-14,U		offset in variable t
-* Line lz77.c:139: assignment: =
-* Line lz77.c:139: function call: findInDic()
+* Line lz77.c:140: assignment: =
+* Line lz77.c:140: function call: findInDic()
 	LDY	#$07		optim: transformPshsXPshsX
 * optim: optimizePshsOps
 	LDX	-8,U		optim: transformPshsDPshsD
@@ -96,7 +96,7 @@ L00093	EQU	*
 * optim: optimizePshsOps
 	LDX	-6,U		optim: transformPshsDPshsD
 * optim: optimizePshsOps
-	LDD	4,U		variable `input', declared at lz77.c:124
+	LDD	4,U		variable `input', declared at lz77.c:125
 	PSHS	Y,X,B,A		optim: optimizePshsOps
 	LEAX	-11,U		address of struct/union to be returned by findInDic()
 	PSHS	X		hidden argument
@@ -106,35 +106,35 @@ L00093	EQU	*
 	LDD	#3		size of struct tupleStruct
 	PSHS	B,A		push size to _memcpy
 	PSHS	X		source struct
-	LEAX	-16,U		variable `t', declared at lz77.c:138
+	LEAX	-16,U		variable `t', declared at lz77.c:139
 	PSHS	X
 	LBSR	_memcpy		copy struct (preserves X)
 	LEAS	6,S
-* Line lz77.c:142: function call: toEmittedTuple()
+* Line lz77.c:143: function call: toEmittedTuple()
 	LEAY	-13,U		optim: transformPshsXPshsX
 * optim: optimizePshsOps
-	LEAX	-16,U		variable `t', declared at lz77.c:138
+	LEAX	-16,U		variable `t', declared at lz77.c:139
 	PSHS	Y,X		optim: optimizePshsOps
 	LBSR	_toEmittedTuple
 	LEAS	4,S
-* Line lz77.c:143: function call: memcpy()
+* Line lz77.c:144: function call: memcpy()
 	CLRA
 	LDB	#$02		constant expression: 2 decimal, unsigned
 	PSHS	B,A		argument 3 of memcpy(): unsigned int
-	LEAX	-13,U		variable `q', declared at lz77.c:141
+	LEAX	-13,U		variable `q', declared at lz77.c:142
 * optim: optimizePshsOps
-	LDD	-2,U		variable `outputIdx', declared at lz77.c:130
+	LDD	-2,U		variable `outputIdx', declared at lz77.c:131
 	PSHS	X,B,A		optim: optimizePshsOps
-	LDD	8,U		variable `output', declared at lz77.c:124
+	LDD	8,U		variable `output', declared at lz77.c:125
 	ADDD	,S++
 	PSHS	B,A		argument 1 of memcpy(): unsigned char *
 	LBSR	_memcpy
 	LEAS	6,S
-* Line lz77.c:144: assignment: +=
+* Line lz77.c:145: assignment: +=
 	LDD	-2,U		variable outputIdx
-	ADDD	#$02		+= operator at lz77.c:144
+	ADDD	#$02		+= operator at lz77.c:145
 	STD	-2,U
-* Line lz77.c:146: assignment: +=
+* Line lz77.c:147: assignment: +=
 	LDB	-15,U		member l of tupleStruct, via variable t
 	CLRA			promotion of binary operand
 * optim: optimizeStackOperations2
@@ -146,19 +146,19 @@ L00093	EQU	*
 * 
 * 
 	STD	-8,U
-L00089	EQU	*		while condition at lz77.c:131
+L00089	EQU	*		while condition at lz77.c:132
 	LDD	-8,U		variable index
 	CMPD	6,U		variable iSize
 	LBLT	L00088
 * optim: branchToNextLocation
 * Useless label L00090 removed
-* Line lz77.c:148: return with value
-	LDD	-2,U		variable `outputIdx', declared at lz77.c:130
+* Line lz77.c:149: return with value
+	LDD	-2,U		variable `outputIdx', declared at lz77.c:131
 * optim: branchToNextLocation
 * Useless label L00085 removed
 	LEAS	,U
 	PULS	U,PC
-* END FUNCTION compress(): defined at lz77.c:124
+* END FUNCTION compress(): defined at lz77.c:125
 funcend_compress	EQU *
 funcsize_compress	EQU	funcend_compress-_compress
 _delay	IMPORT
@@ -756,7 +756,7 @@ _uncompress	EXPORT
 
 *******************************************************************************
 
-* FUNCTION uncompress(): defined at lz77.c:151
+* FUNCTION uncompress(): defined at lz77.c:183
 _uncompress	EQU	*
 * Calling convention: Default
 	PSHS	U
@@ -772,28 +772,28 @@ _uncompress	EQU	*
 *     -7,U:    3 bytes: t: struct tupleStruct
 *     -4,U:    2 bytes: inputIdx: int
 *     -2,U:    2 bytes: outputIdx: int
-* Line lz77.c:153: init of variable inputIdx
+* Line lz77.c:185: init of variable inputIdx
 	CLRA
 	CLRB
 	STD	-4,U		variable inputIdx
-* Line lz77.c:153: init of variable outputIdx
+* Line lz77.c:185: init of variable outputIdx
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-2,U		variable outputIdx
-* Line lz77.c:154: function call: memset()
-	LDD	10,U		variable `oSize', declared at lz77.c:151
+* Line lz77.c:186: function call: memset()
+	LDD	10,U		variable `oSize', declared at lz77.c:183
 	PSHS	B,A		argument 3 of memset(): int
 	CLRA
 	CLRB
 	PSHS	B,A		argument 2 of memset(): int
-	LDD	8,U		variable `output', declared at lz77.c:151
+	LDD	8,U		variable `output', declared at lz77.c:183
 	PSHS	B,A		argument 1 of memset(): unsigned char *
 	LBSR	_memset
 	LEAS	6,S
-* Line lz77.c:156: while
+* Line lz77.c:188: while
 	LBRA	L00128		jump to while condition
 L00127	EQU	*		while body
-* Line lz77.c:158: init of variable q
+* Line lz77.c:190: init of variable q
 	LDD	-4,U		variable inputIdx
 	LDX	4,U		pointer input
 * optimizeLoadDX
@@ -805,21 +805,21 @@ L00127	EQU	*		while body
 * optimizeLoadDX
 	LDB	D,X		get r-value
 	STB	-8,U		offset in variable q
-* Line lz77.c:160: function call: fromEmittedTuple()
+* Line lz77.c:192: function call: fromEmittedTuple()
 	LEAY	-7,U		optim: transformPshsXPshsX
 * optim: optimizePshsOps
-	LEAX	-9,U		variable `q', declared at lz77.c:158
+	LEAX	-9,U		variable `q', declared at lz77.c:190
 	PSHS	Y,X		optim: optimizePshsOps
 	LBSR	_fromEmittedTuple
 	LEAS	4,S
-* Line lz77.c:162: if
+* Line lz77.c:194: if
 	LDB	-7,U		member d of tupleStruct, via variable t
 * optim: loadCmpZeroBeqOrBne
 	BEQ	L00131		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
 * Useless label L00130 removed
-* Line lz77.c:162
-* Line lz77.c:163: function call: memcpy()
+* Line lz77.c:194
+* Line lz77.c:195: function call: memcpy()
 	LDB	-6,U		member l of tupleStruct, via variable t
 	CLRA			promoting byte argument to word
 	PSHS	B,A		argument 3 of memcpy(): unsigned char
@@ -828,30 +828,30 @@ L00127	EQU	*		while body
 	PSHS	B,A
 * optim: optimizeStackOperations4
 * optim: optimizeStackOperations4
-	LDD	8,U		variable `output', declared at lz77.c:151
+	LDD	8,U		variable `output', declared at lz77.c:183
 	ADDD	-2,U		optim: optimizeStackOperations4
 	SUBD	,S++
 	PSHS	B,A		argument 2 of memcpy(): unsigned char *
 * optim: optimizeStackOperations4
 * optim: optimizeStackOperations4
-	LDD	8,U		variable `output', declared at lz77.c:151
+	LDD	8,U		variable `output', declared at lz77.c:183
 	ADDD	-2,U		optim: optimizeStackOperations4
 	PSHS	B,A		argument 1 of memcpy(): unsigned char *
 	LBSR	_memcpy
 	LEAS	6,S
-* Line lz77.c:164: assignment: +=
+* Line lz77.c:196: assignment: +=
 	LDB	-6,U		member l of tupleStruct, via variable t
 	CLRA
 	ADDD	-2,U		optim: pushDLoadAdd
 * 
 * 
 	STD	-2,U
-L00131	EQU	*		else clause of if() started at lz77.c:162
+L00131	EQU	*		else clause of if() started at lz77.c:194
 * Useless label L00132 removed
-* Line lz77.c:167: assignment: =
+* Line lz77.c:199: assignment: =
 	LDB	-5,U		member c of tupleStruct, via variable t
 	PSHS	B
-	LDD	-2,U		variable `outputIdx', declared at lz77.c:167
+	LDD	-2,U		variable `outputIdx', declared at lz77.c:199
 	ADDD	#1
 	STD	-2,U
 	SUBD	#1		post increment yields initial value
@@ -859,23 +859,23 @@ L00131	EQU	*		else clause of if() started at lz77.c:162
 	LEAX	D,X		add offset
 	LDB	,S+
 	STB	,X
-* Line lz77.c:172: assignment: +=
+* Line lz77.c:204: assignment: +=
 	LDD	-4,U		variable inputIdx
-	ADDD	#$02		+= operator at lz77.c:172
+	ADDD	#$02		+= operator at lz77.c:204
 	STD	-4,U
-L00128	EQU	*		while condition at lz77.c:156
+L00128	EQU	*		while condition at lz77.c:188
 	LDD	-4,U		variable inputIdx
 	CMPD	6,U		variable iSize
 	LBLT	L00127
 * optim: branchToNextLocation
 * Useless label L00129 removed
-* Line lz77.c:174: return with value
-	LDD	-2,U		variable `outputIdx', declared at lz77.c:153
+* Line lz77.c:206: return with value
+	LDD	-2,U		variable `outputIdx', declared at lz77.c:185
 * optim: branchToNextLocation
 * Useless label L00086 removed
 	LEAS	,U
 	PULS	U,PC
-* END FUNCTION uncompress(): defined at lz77.c:151
+* END FUNCTION uncompress(): defined at lz77.c:183
 funcend_uncompress	EQU *
 funcsize_uncompress	EQU	funcend_uncompress-_uncompress
 _utoa10	IMPORT

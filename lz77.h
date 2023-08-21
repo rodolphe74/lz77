@@ -20,9 +20,18 @@
 
 // MAX 5 bits : 31
 #define DIC_SIZE 31
+#define DIC_BIT_SIZE 5
+// #define DIC_SIZE 7
+// #define DIC_BIT_SIZE 3
 
 // MAX 3 bits : 7
 #define AHEAD_SIZE 7
+#define AHEAD_BIT_SIZE 3
+// #define AHEAD_SIZE 15
+// #define AHEAD_BIT_SIZE 4
+
+
+#define CHAR_BIT_SIZE 8
 
 struct tupleStruct {
     UCHAR d;
@@ -37,11 +46,22 @@ struct emittedTupleStruct {
 };
 typedef struct emittedTupleStruct EmittedTuple;
 
+#ifndef COMPILER_IS_CMOC
+struct bitFieldStruct {
+    union {
+        UCHAR *buffer;
+        FILE *file;
+    };
+    UINT currentIndex;
+    CHAR bitLeft;
+};
+#else
 struct bitFieldStruct {
     UCHAR *buffer;
     UINT currentIndex;
     CHAR bitLeft;
 };
+#endif
 typedef struct bitFieldStruct BitField;
 
 void toEmittedTuple(const Tuple *t, EmittedTuple *q);
