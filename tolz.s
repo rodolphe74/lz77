@@ -42,7 +42,7 @@ __160	EQU	*
 
 
 * End of inline assembly.
-* Useless label L00078 removed
+* Useless label L00079 removed
 	RTS
 * END FUNCTION _160(): defined at tolz.c:10
 funcend__160	EQU *
@@ -79,7 +79,7 @@ PALETTE_FOND
 
 
 * End of inline assembly.
-* Useless label L00079 removed
+* Useless label L00080 removed
 	LEAS	,U
 	PULS	U,PC
 * END FUNCTION _PALETTE(): defined at tolz.c:20
@@ -103,7 +103,7 @@ __SWITCH_B	EQU	*
 
 
 * End of inline assembly.
-* Useless label L00080 removed
+* Useless label L00081 removed
 	RTS
 * END FUNCTION _SWITCH_B(): defined at tolz.c:39
 funcend__SWITCH_B	EQU *
@@ -127,6 +127,7 @@ _dwtoa	IMPORT
 _enableCMOCFloatSupport	IMPORT
 _exit	IMPORT
 _fromEmittedTuple	IMPORT
+_initBitField	IMPORT
 _isalnum	IMPORT
 _isalpha	IMPORT
 _isdigit	IMPORT
@@ -144,27 +145,326 @@ _main	EQU	*
 * Calling convention: Default
 	PSHS	U
 	LEAU	,S
-	LEAS	-4,S
+	LEAS	-5135,S
 * Local non-static variable(s):
+*  -5135,U:    2 bytes: v: unsigned int
+*  -5133,U:    2 bytes: i: int
+*  -5131,U:    5 bytes: bf: struct bitFieldStruct
+*  -5126,U:  256 bytes: bitsMax: unsigned char[]
+*  -4870,U:  512 bytes: values: unsigned int[]
+*  -4358,U:  512 bytes: retrievedValues: unsigned int[]
+*  -3846,U: 3840 bytes: buffer: unsigned char[]
+*     -6,U:    2 bytes: ja: int
 *     -4,U:    2 bytes: screenStart: int *
 *     -2,U:    2 bytes: screenStartChar: unsigned char *
-* Line tolz.c:50: function call: _160()
+* Line tolz.c:56: function call: memset()
+	LDD	#$0F00		constant expression: 3840 decimal, signed
+	PSHS	B,A		argument 3 of memset(): int
+	CLRA
+* optim: removeClr
+	PSHS	B,A		argument 2 of memset(): int
+	LEAX	-3846,U		address of array buffer
+	PSHS	X		argument 1 of memset(): unsigned char[]
+	LBSR	_memset
+	LEAS	6,S
+* Line tolz.c:57: function call: initBitField()
+	LEAY	-3846,U		optim: transformPshsXPshsX
+* optim: optimizePshsOps
+	LEAX	-5131,U		variable `bf', declared at tolz.c:51
+	PSHS	Y,X		optim: optimizePshsOps
+	LBSR	_initBitField
+	LEAS	4,S
+* Line tolz.c:58: function call: printf()
+	LDY	#$0D		optim: transformPshsXPshsX
+* optim: optimizePshsOps
+	LDX	#$0A		optim: transformPshsDPshsD
+* optim: optimizePshsOps
+	LDD	#$0100		decimal 256 signed
+	PSHS	Y,X,B,A		optim: optimizePshsOps
+	LEAX	S00083,PCR	"randomizing %d values%c%c"
+	PSHS	X		argument 1 of printf(): const char[]
+	LBSR	_printf
+	LEAS	8,S
+* Line tolz.c:59: for init
+* Line tolz.c:59: init of variable i
+	CLRA
+	CLRB
+	STD	-5133,U		variable i
+	LBRA	L00090		jump to for condition
+L00089	EQU	*
+* Line tolz.c:59: for body
+* Line tolz.c:60: assignment: =
+	CLRA
+	LDB	#$01		decimal 1 signed
+	PSHS	B,A
+* Line tolz.c:60: function call: rand()
+	LBSR	_rand
+	TFR	D,X		optim: stripExtraPulsX
+	CLRA
+	LDB	#$0E		decimal 14 signed
+* optim: stripExtraPulsX
+	LBSR	SDIV16
+	ADDD	,S++
+* Cast from `int' to byte: result already in B
+	PSHS	B
+	LDD	-5133,U		variable i
+	LEAX	-5126,U		address of array bitsMax
+	LEAX	D,X		add offset
+	LDB	,S+
+	STB	,X
+* Line tolz.c:61: assignment: =
+* Line tolz.c:61: function call: rand()
+	LBSR	_rand
+	PSHS	B,A
+	CLRA
+	LDB	#$01		decimal 1 signed
+	PSHS	B,A		left side of shift: used and popped by shiftLeft
+	LDD	-5133,U		variable i
+	LEAX	-5126,U		address of array bitsMax
+	LEAX	D,X		add offset
+	LDB	,X		get r-value
+	CLRA
+	LBSR	shiftLeft
+	PULS	X
+	LBSR	SDIV16
+	PSHS	B,A
+	LDD	-5133,U		variable i
+	LSLB
+	ROLA
+	LEAX	-4870,U		address of array values
+	LEAX	D,X		add offset
+	PULS	A,B		retrieve value to store
+	STD	,X
+* Useless label L00091 removed
+* Line tolz.c:59: for increment(s)
+	LDD	-5133,U
+	ADDD	#1
+	STD	-5133,U
+L00090	EQU	*
+* Line tolz.c:59: for condition
+	LDD	-5133,U		variable i
+	CMPD	#$0100
+	LBLT	L00089
+* optim: branchToNextLocation
+* Useless label L00092 removed
+* Line tolz.c:64: function call: printf()
+	LEAX	S00084,PCR	"\n"
+	PSHS	X		argument 1 of printf(): const char[]
+	LBSR	_printf
+	LEAS	2,S
+* Line tolz.c:65: function call: printf()
+	LDY	#$0D		optim: transformPshsXPshsX
+* optim: optimizePshsOps
+	LDX	#$0A		optim: transformPshsDPshsD
+* optim: optimizePshsOps
+	LDD	#$0100		decimal 256 signed
+	PSHS	Y,X,B,A		optim: optimizePshsOps
+	LEAX	S00085,PCR	"writing %d values%c%c"
+	PSHS	X		argument 1 of printf(): const char[]
+	LBSR	_printf
+	LEAS	8,S
+* Line tolz.c:66: for init
+* Line tolz.c:66: init of variable i
+	CLRA
+	CLRB
+	STD	-5133,U		variable i
+	BRA	L00094		jump to for condition
+L00093	EQU	*
+* Line tolz.c:66: for body
+* Line tolz.c:68: function call: writebits()
+	LDD	-5133,U		variable i
+	LEAX	-5126,U		address of array bitsMax
+* optimizeLoadDX
+	LDB	D,X		get r-value
+	CLRA			promoting byte argument to word
+	PSHS	B,A		argument 3 of writebits(): unsigned char
+	LDD	-5133,U		variable i
+	LSLB
+	ROLA
+	LEAX	-4870,U		address of array values
+* optimizeLoadDX
+	LDD	D,X		get r-value
+	PSHS	B,A		argument 2 of writebits(): unsigned int
+	LEAX	-5131,U		variable `bf', declared at tolz.c:51
+	PSHS	X		argument 1 of writebits(): struct bitFieldStruct *
+	LBSR	_writebits
+	LEAS	6,S
+* Useless label L00095 removed
+* Line tolz.c:66: for increment(s)
+	LDD	-5133,U
+	ADDD	#1
+	STD	-5133,U
+L00094	EQU	*
+* Line tolz.c:66: for condition
+	LDD	-5133,U		variable i
+	CMPD	#$0100
+	BLT	L00093
+* optim: branchToNextLocation
+* Useless label L00096 removed
+* Line tolz.c:70: function call: initBitField()
+	LEAY	-3846,U		optim: transformPshsXPshsX
+* optim: optimizePshsOps
+	LEAX	-5131,U		variable `bf', declared at tolz.c:51
+	PSHS	Y,X		optim: optimizePshsOps
+	LBSR	_initBitField
+	LEAS	4,S
+* Line tolz.c:71: function call: printf()
+	LDY	#$0D		optim: transformPshsXPshsX
+* optim: optimizePshsOps
+	LDX	#$0A		optim: transformPshsDPshsD
+* optim: optimizePshsOps
+	LDD	#$0100		decimal 256 signed
+	PSHS	Y,X,B,A		optim: optimizePshsOps
+	LEAX	S00086,PCR	"reading %d values%c%c"
+	PSHS	X		argument 1 of printf(): const char[]
+	LBSR	_printf
+	LEAS	8,S
+* Line tolz.c:72: for init
+* Line tolz.c:72: init of variable i
+	CLRA
+	CLRB
+	STD	-5133,U		variable i
+	BRA	L00098		jump to for condition
+L00097	EQU	*
+* Line tolz.c:72: for body
+* Line tolz.c:73: init of variable v
+* Line tolz.c:73: function call: readbits()
+	LDD	-5133,U		variable i
+	LEAX	-5126,U		address of array bitsMax
+* optimizeLoadDX
+	LDB	D,X		get r-value
+	CLRA			promoting byte argument to word
+	PSHS	B,A		argument 2 of readbits(): unsigned char
+	LEAX	-5131,U		variable `bf', declared at tolz.c:51
+	PSHS	X		argument 1 of readbits(): struct bitFieldStruct *
+	LBSR	_readbits
+	LEAS	4,S
+	STD	-5135,U		variable v
+* Line tolz.c:75: assignment: =
+* optim: storeLoad
+	PSHS	B,A
+	LDD	-5133,U		variable i
+	LSLB
+	ROLA
+	LEAX	-4358,U		address of array retrievedValues
+	LEAX	D,X		add offset
+	PULS	A,B		retrieve value to store
+	STD	,X
+* Useless label L00099 removed
+* Line tolz.c:72: for increment(s)
+	LDD	-5133,U
+	ADDD	#1
+	STD	-5133,U
+L00098	EQU	*
+* Line tolz.c:72: for condition
+	LDD	-5133,U		variable i
+	CMPD	#$0100
+	BLT	L00097
+* optim: branchToNextLocation
+* Useless label L00100 removed
+* Line tolz.c:77: function call: printf()
+	LDY	#$0D		optim: transformPshsXPshsX
+* optim: optimizePshsOps
+	LDX	#$0A		optim: transformPshsDPshsD
+* optim: optimizePshsOps
+	LDD	#$0100		decimal 256 signed
+	PSHS	Y,X,B,A		optim: optimizePshsOps
+	LEAX	S00087,PCR	"comparing %d values%c%c"
+	PSHS	X		argument 1 of printf(): const char[]
+	LBSR	_printf
+	LEAS	8,S
+* Line tolz.c:78: init of variable ja
+	CLRA
+	LDB	#$01		1
+	STD	-6,U		variable ja
+* Line tolz.c:79: for init
+* Line tolz.c:79: init of variable i
+* optim: stripExtraClrA_B
+	CLRB
+	STD	-5133,U		variable i
+	BRA	L00102		jump to for condition
+L00101	EQU	*
+* Line tolz.c:79: for body
+* Line tolz.c:80: if
+	LDD	-5133,U		variable i
+	LSLB
+	ROLA
+	LEAX	-4358,U		address of array retrievedValues
+* optimizeLoadDX
+	LDD	D,X		get r-value
+	PSHS	B,A
+	LDD	-5133,U		variable i
+	LSLB
+	ROLA
+	LEAX	-4870,U		address of array values
+* optimizeLoadDX
+	LDD	D,X		get r-value
+	CMPD	,S++
+	BEQ	L00106		 (optim: condBranchOverUncondBranch)
+* optim: condBranchOverUncondBranch
+* Useless label L00105 removed
+* Line tolz.c:80
+* Line tolz.c:81: assignment: =
+	CLRA
+	CLRB
+	STD	-6,U
+	BRA	L00104		break
+L00106	EQU	*		else clause of if() started at tolz.c:80
+* Useless label L00107 removed
+* Useless label L00103 removed
+* Line tolz.c:79: for increment(s)
+	LDD	-5133,U
+	ADDD	#1
+	STD	-5133,U
+L00102	EQU	*
+* Line tolz.c:79: for condition
+	LDD	-5133,U		variable i
+	CMPD	#$0100
+	BLT	L00101
+* optim: branchToNextLocation
+L00104	EQU	*		end for
+* Line tolz.c:85: if
+	LDD	-6,U		variable `ja', declared at tolz.c:78
+* optim: loadCmpZeroBeqOrBne
+	BEQ	L00109		 (optim: condBranchOverUncondBranch)
+* optim: condBranchOverUncondBranch
+* Useless label L00108 removed
+* Line tolz.c:85
+* Line tolz.c:85: function call: printf()
+	LDX	#$0D		optim: transformPshsDPshsD
+* optim: optimizePshsOps
+	CLRA
+	LDB	#$0A		decimal 10 signed
+	PSHS	X,B,A		optim: optimizePshsOps
+	LEAX	S00088,PCR	"sch\xC3\xB6n%c%c"
+	PSHS	X		argument 1 of printf(): const char[]
+	LBSR	_printf
+	LEAS	6,S
+L00109	EQU	*		else clause of if() started at tolz.c:85
+* Useless label L00110 removed
+* Line tolz.c:86: function call: exit()
+	CLRA
+	CLRB
+	PSHS	B,A		argument 1 of exit(): int
+	LBSR	_exit
+	LEAS	2,S
+* Line tolz.c:89: function call: _160()
 	LBSR	__160
-* Line tolz.c:51: function call: _PALETTE()
+* Line tolz.c:90: function call: _PALETTE()
 	LEAX	_fouAPi00+0,PCR	member pal of fouAPi00_struct, via variable fouAPi00
 	PSHS	X		optim: optimizeTfrPush
 * optim: optimizeTfrPush
 	LBSR	__PALETTE
 	LEAS	2,S
-* Line tolz.c:53: init of variable screenStart
+* Line tolz.c:92: init of variable screenStart
 	LDD	#$4000		decimal 16384 signed
 * Emitted no code to cast `int' to `int *'
 	STD	-4,U		variable screenStart
-* Line tolz.c:54: init of variable screenStartChar
+* Line tolz.c:93: init of variable screenStartChar
 * optim: storeLoad
 * Emitted no code to cast `int *' to `unsigned char *'
 	STD	-2,U		variable screenStartChar
-* Line tolz.c:91: function call: uncompress()
+* Line tolz.c:130: function call: uncompress()
 	LDY	#$1F40		optim: transformPshsXPshsX
 * optim: optimizePshsOps
 	LDX	-2,U		optim: transformPshsDPshsD
@@ -176,9 +476,9 @@ _main	EQU	*
 	PSHS	B,A		argument 1 of uncompress(): unsigned char[]
 	LBSR	_uncompress
 	LEAS	8,S
-* Line tolz.c:92: function call: _SWITCH_B()
+* Line tolz.c:131: function call: _SWITCH_B()
 	LBSR	__SWITCH_B
-* Line tolz.c:93: function call: uncompress()
+* Line tolz.c:132: function call: uncompress()
 	LDY	#$1F40		optim: transformPshsXPshsX
 * optim: optimizePshsOps
 	LDX	-2,U		optim: transformPshsDPshsD
@@ -190,11 +490,11 @@ _main	EQU	*
 * optim: optimizeTfrPush
 	LBSR	_uncompress
 	LEAS	8,S
-* Line tolz.c:121: return with value
+* Line tolz.c:160: return with value
 	CLRA
 	CLRB
 * optim: branchToNextLocation
-* Useless label L00081 removed
+* Useless label L00082 removed
 	LEAS	,U
 	PULS	U,PC
 * END FUNCTION main(): defined at tolz.c:48
@@ -289,6 +589,32 @@ INITGL	EQU	*
 
 
 string_literals_start	EQU	*
+
+
+*******************************************************************************
+
+* STRING LITERALS
+S00083	EQU	*
+	FCC	"randomizing %d values%c%c"
+	FCB	0
+S00084	EQU	*
+	FCB	$0A
+	FCB	0
+S00085	EQU	*
+	FCC	"writing %d values%c%c"
+	FCB	0
+S00086	EQU	*
+	FCC	"reading %d values%c%c"
+	FCB	0
+S00087	EQU	*
+	FCC	"comparing %d values%c%c"
+	FCB	0
+S00088	EQU	*
+	FCC	"sch"
+	FCB	$C3
+	FCB	$B6
+	FCC	"n%c%c"
+	FCB	0
 string_literals_end	EQU	*
 
 
@@ -24255,8 +24581,17 @@ program_end	EQU	*
 
 *******************************************************************************
 
-* Importing 1 utility routine(s).
+* Importing 10 utility routine(s).
+SDIV16	IMPORT
+_exit	IMPORT
+_initBitField	IMPORT
+_memset	IMPORT
+_printf	IMPORT
+_rand	IMPORT
+_readbits	IMPORT
 _uncompress	IMPORT
+_writebits	IMPORT
+shiftLeft	IMPORT
 
 
 *******************************************************************************

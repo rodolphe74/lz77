@@ -11,6 +11,7 @@
 #define INT int
 #define UINT unsigned int
 #define UCHAR unsigned char
+#define CHAR char
 #endif
 
 #define F_BUFFER_SZ 512
@@ -46,8 +47,8 @@ typedef struct bitFieldStruct BitField;
 void toEmittedTuple(const Tuple *t, EmittedTuple *q);
 void fromEmittedTuple(const EmittedTuple *q, Tuple *t);
 void initBitField(BitField *bf, UCHAR *buf);
-void writebits(BitField *bf, UCHAR value, UCHAR bitCount);
-UCHAR readbits(BitField bf, UCHAR bitCount);
+void writebits(BitField *bf, UINT value, UCHAR bitCount);
+UINT readbits(BitField *bf, UCHAR bitCount);
 INT compress(UCHAR *input, INT iSize, UCHAR *output, INT oSize);
 INT uncompress(UCHAR *input, INT iSize, UCHAR *output, INT oSize);
 #ifndef COMPILER_IS_CMOC

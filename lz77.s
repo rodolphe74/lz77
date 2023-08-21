@@ -18,7 +18,7 @@ _compress	EXPORT
 
 *******************************************************************************
 
-* FUNCTION compress(): defined at lz77.c:68
+* FUNCTION compress(): defined at lz77.c:124
 _compress	EQU	*
 * Calling convention: Default
 	PSHS	U
@@ -32,51 +32,51 @@ _compress	EQU	*
 * Local non-static variable(s):
 *    -16,U:    3 bytes: t: struct tupleStruct
 *    -13,U:    2 bytes: q: struct emittedTupleStruct
-*    -11,U:    3 bytes: $V00083: struct tupleStruct
+*    -11,U:    3 bytes: $V00087: struct tupleStruct
 *     -8,U:    2 bytes: index: int
 *     -6,U:    2 bytes: dicIndexStart: int
 *     -4,U:    2 bytes: dicIndexStop: int
 *     -2,U:    2 bytes: outputIdx: int
-* Line lz77.c:71: init of variable index
+* Line lz77.c:127: init of variable index
 	CLRA
 	CLRB
 	STD	-8,U		variable index
-* Line lz77.c:72: init of variable dicIndexStart
+* Line lz77.c:128: init of variable dicIndexStart
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-6,U		variable dicIndexStart
-* Line lz77.c:72: init of variable dicIndexStop
+* Line lz77.c:128: init of variable dicIndexStop
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-4,U		variable dicIndexStop
-* Line lz77.c:74: init of variable outputIdx
+* Line lz77.c:130: init of variable outputIdx
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-2,U		variable outputIdx
-* Line lz77.c:75: while
-	LBRA	L00085		jump to while condition
-L00084	EQU	*		while body
-* Line lz77.c:77: assignment: =
-* Line lz77.c:77: conditional expression
+* Line lz77.c:131: while
+	LBRA	L00089		jump to while condition
+L00088	EQU	*		while body
+* Line lz77.c:133: assignment: =
+* Line lz77.c:133: conditional expression
 	LDD	-8,U		variable index
 	ADDD	#$FFE1		65505
 	CMPD	#0
-	BGE	L00088		 (optim: condBranchOverUncondBranch)
+	BGE	L00092		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00087 removed
+* Useless label L00091 removed
 	CLRA
 	CLRB
-	BRA	L00089		end of true expression of conditional
-L00088	EQU	*
+	BRA	L00093		end of true expression of conditional
+L00092	EQU	*
 	LDD	-8,U		variable index
 	ADDD	#$FFE1		65505
-L00089	EQU	*
+L00093	EQU	*
 	STD	-6,U
-* Line lz77.c:78: assignment: =
+* Line lz77.c:134: assignment: =
 * optim: stripConsecutiveLoadsToSameReg
 	LDD	-8,U
 	STD	-4,U
-* Line lz77.c:82: init of variable t
+* Line lz77.c:138: init of variable t
 	CLRA
 	CLRB
 	STB	-16,U		offset in variable t
@@ -86,8 +86,8 @@ L00089	EQU	*
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STB	-14,U		offset in variable t
-* Line lz77.c:83: assignment: =
-* Line lz77.c:83: function call: findInDic()
+* Line lz77.c:139: assignment: =
+* Line lz77.c:139: function call: findInDic()
 	LDY	#$07		optim: transformPshsXPshsX
 * optim: optimizePshsOps
 	LDX	-8,U		optim: transformPshsDPshsD
@@ -96,7 +96,7 @@ L00089	EQU	*
 * optim: optimizePshsOps
 	LDX	-6,U		optim: transformPshsDPshsD
 * optim: optimizePshsOps
-	LDD	4,U		variable `input', declared at lz77.c:68
+	LDD	4,U		variable `input', declared at lz77.c:124
 	PSHS	Y,X,B,A		optim: optimizePshsOps
 	LEAX	-11,U		address of struct/union to be returned by findInDic()
 	PSHS	X		hidden argument
@@ -106,35 +106,35 @@ L00089	EQU	*
 	LDD	#3		size of struct tupleStruct
 	PSHS	B,A		push size to _memcpy
 	PSHS	X		source struct
-	LEAX	-16,U		variable `t', declared at lz77.c:82
+	LEAX	-16,U		variable `t', declared at lz77.c:138
 	PSHS	X
 	LBSR	_memcpy		copy struct (preserves X)
 	LEAS	6,S
-* Line lz77.c:86: function call: toEmittedTuple()
+* Line lz77.c:142: function call: toEmittedTuple()
 	LEAY	-13,U		optim: transformPshsXPshsX
 * optim: optimizePshsOps
-	LEAX	-16,U		variable `t', declared at lz77.c:82
+	LEAX	-16,U		variable `t', declared at lz77.c:138
 	PSHS	Y,X		optim: optimizePshsOps
 	LBSR	_toEmittedTuple
 	LEAS	4,S
-* Line lz77.c:87: function call: memcpy()
+* Line lz77.c:143: function call: memcpy()
 	CLRA
 	LDB	#$02		constant expression: 2 decimal, unsigned
 	PSHS	B,A		argument 3 of memcpy(): unsigned int
-	LEAX	-13,U		variable `q', declared at lz77.c:85
+	LEAX	-13,U		variable `q', declared at lz77.c:141
 * optim: optimizePshsOps
-	LDD	-2,U		variable `outputIdx', declared at lz77.c:74
+	LDD	-2,U		variable `outputIdx', declared at lz77.c:130
 	PSHS	X,B,A		optim: optimizePshsOps
-	LDD	8,U		variable `output', declared at lz77.c:68
+	LDD	8,U		variable `output', declared at lz77.c:124
 	ADDD	,S++
 	PSHS	B,A		argument 1 of memcpy(): unsigned char *
 	LBSR	_memcpy
 	LEAS	6,S
-* Line lz77.c:88: assignment: +=
+* Line lz77.c:144: assignment: +=
 	LDD	-2,U		variable outputIdx
-	ADDD	#$02		+= operator at lz77.c:88
+	ADDD	#$02		+= operator at lz77.c:144
 	STD	-2,U
-* Line lz77.c:90: assignment: +=
+* Line lz77.c:146: assignment: +=
 	LDB	-15,U		member l of tupleStruct, via variable t
 	CLRA			promotion of binary operand
 * optim: optimizeStackOperations2
@@ -146,19 +146,19 @@ L00089	EQU	*
 * 
 * 
 	STD	-8,U
-L00085	EQU	*		while condition at lz77.c:75
+L00089	EQU	*		while condition at lz77.c:131
 	LDD	-8,U		variable index
 	CMPD	6,U		variable iSize
-	LBLT	L00084
+	LBLT	L00088
 * optim: branchToNextLocation
-* Useless label L00086 removed
-* Line lz77.c:92: return with value
-	LDD	-2,U		variable `outputIdx', declared at lz77.c:74
+* Useless label L00090 removed
+* Line lz77.c:148: return with value
+	LDD	-2,U		variable `outputIdx', declared at lz77.c:130
 * optim: branchToNextLocation
-* Useless label L00081 removed
+* Useless label L00085 removed
 	LEAS	,U
 	PULS	U,PC
-* END FUNCTION compress(): defined at lz77.c:68
+* END FUNCTION compress(): defined at lz77.c:124
 funcend_compress	EQU *
 funcsize_compress	EQU	funcend_compress-_compress
 _delay	IMPORT
@@ -174,7 +174,7 @@ _findInDic	EXPORT
 
 *******************************************************************************
 
-* FUNCTION findInDic(): defined at lz77.c:23
+* FUNCTION findInDic(): defined at lz77.c:79
 _findInDic	EQU	*
 * Calling convention: Default
 	PSHS	U
@@ -193,14 +193,14 @@ _findInDic	EQU	*
 *     -6,U:    2 bytes: j: int
 *     -4,U:    2 bytes: k: int
 *     -2,U:    2 bytes: maxK: int
-* Line lz77.c:26: if
+* Line lz77.c:82: if
 	LDD	12,U		variable startAHead
 	CMPD	8,U		variable startDicIndex
-	BNE	L00091		 (optim: condBranchOverUncondBranch)
+	BNE	L00095		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00090 removed
-* Line lz77.c:26
-* Line lz77.c:27: init of variable t
+* Useless label L00094 removed
+* Line lz77.c:82
+* Line lz77.c:83: init of variable t
 	CLRA
 	CLRB
 	STB	-15,U		offset in variable t
@@ -212,17 +212,17 @@ _findInDic	EQU	*
 * optimizeLoadDX
 	LDB	D,X		get r-value
 	STB	-13,U		offset in variable t
-* Line lz77.c:28: return struct/union by value
-	LEAX	-15,U		variable `t', declared at lz77.c:27
+* Line lz77.c:84: return struct/union by value
+	LEAX	-15,U		variable `t', declared at lz77.c:83
 	PSHS	X		source struct/union
 	LDX	4,U		address of return value
 	LDD	#3		size of struct tupleStruct
 	LBSR	copyMem
 	LEAS	2,S		discard copyMem argument
-	LBRA	L00080		return (lz77.c:28)
-L00091	EQU	*		else clause of if() started at lz77.c:26
-* Useless label L00092 removed
-* Line lz77.c:31: init of variable t
+	LBRA	L00084		return (lz77.c:84)
+L00095	EQU	*		else clause of if() started at lz77.c:82
+* Useless label L00096 removed
+* Line lz77.c:87: init of variable t
 	CLRA
 	CLRB
 	STB	-12,U		offset in variable t
@@ -234,46 +234,46 @@ L00091	EQU	*		else clause of if() started at lz77.c:26
 * optimizeLoadDX
 	LDB	D,X		get r-value
 	STB	-10,U		offset in variable t
-* Line lz77.c:32: init of variable match
+* Line lz77.c:88: init of variable match
 	CLR	-9,U		variable match
-* Line lz77.c:33: init of variable i
+* Line lz77.c:89: init of variable i
 	CLRA
 	CLRB
 	STD	-8,U		variable i
-* Line lz77.c:33: init of variable j
+* Line lz77.c:89: init of variable j
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-6,U		variable j
-* Line lz77.c:33: init of variable k
+* Line lz77.c:89: init of variable k
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-4,U		variable k
-* Line lz77.c:34: init of variable maxK
+* Line lz77.c:90: init of variable maxK
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-2,U		variable maxK
-* Line lz77.c:35: while
-	LBRA	L00094		jump to while condition
-L00093	EQU	*		while body
-* Line lz77.c:37: for init
-* Line lz77.c:37: assignment: =
+* Line lz77.c:91: while
+	LBRA	L00098		jump to while condition
+L00097	EQU	*		while body
+* Line lz77.c:93: for init
+* Line lz77.c:93: assignment: =
 * optim: stripConsecutiveLoadsToSameReg
 	LDD	12,U
 	STD	-8,U
-	LBRA	L00097		jump to for condition
-L00096	EQU	*
-* Line lz77.c:37: for body
-* Line lz77.c:38: assignment: =
+	LBRA	L00101		jump to for condition
+L00100	EQU	*
+* Line lz77.c:93: for body
+* Line lz77.c:94: assignment: =
 	CLR	-9,U		variable match
-* Line lz77.c:39: for init
-* Line lz77.c:39: assignment: =
+* Line lz77.c:95: for init
+* Line lz77.c:95: assignment: =
 * optim: stripConsecutiveLoadsToSameReg
 	LDD	8,U
 	STD	-6,U
-	BRA	L00101		jump to for condition
-L00100	EQU	*
-* Line lz77.c:39: for body
-* Line lz77.c:40: if
+	BRA	L00105		jump to for condition
+L00104	EQU	*
+* Line lz77.c:95: for body
+* Line lz77.c:96: if
 	LDD	12,U		variable startAHead
 	LDX	6,U		pointer input
 * optimizeLoadDX
@@ -284,56 +284,56 @@ L00100	EQU	*
 * optimizeLoadDX
 	LDB	D,X		get r-value
 	CMPB	,S+		compare with LSB
-	BNE	L00105		 (optim: condBranchOverUncondBranch)
+	BNE	L00109		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00104 removed
-* Line lz77.c:40
-* Line lz77.c:42: assignment: =
+* Useless label L00108 removed
+* Line lz77.c:96
+* Line lz77.c:98: assignment: =
 	LDB	#$01
 	STB	-9,U		variable match
-	BRA	L00103		break
-L00105	EQU	*		else clause of if() started at lz77.c:40
+	BRA	L00107		break
+L00109	EQU	*		else clause of if() started at lz77.c:96
+* Useless label L00110 removed
 * Useless label L00106 removed
-* Useless label L00102 removed
-* Line lz77.c:39: for increment(s)
+* Line lz77.c:95: for increment(s)
 	LDD	-6,U
 	ADDD	#1
 	STD	-6,U
-L00101	EQU	*
-* Line lz77.c:39: for condition
+L00105	EQU	*
+* Line lz77.c:95: for condition
 	LDD	-6,U		variable j
 	CMPD	10,U		variable stopDicIndex
-	BLT	L00100
+	BLT	L00104
 * optim: branchToNextLocation
-L00103	EQU	*		end for
-* Line lz77.c:46: if
-	LDB	-9,U		variable `match', declared at lz77.c:32
+L00107	EQU	*		end for
+* Line lz77.c:102: if
+	LDB	-9,U		variable `match', declared at lz77.c:88
 * optim: loadCmpZeroBeqOrBne
-	LBEQ	L00108		 (optim: condBranchOverUncondBranch)
+	LBEQ	L00112		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00107 removed
-* Line lz77.c:46
-* Line lz77.c:47: assignment: =
+* Useless label L00111 removed
+* Line lz77.c:102
+* Line lz77.c:103: assignment: =
 	CLRA
 	LDB	#$01		decimal 1 signed
 	STD	-4,U
-* Line lz77.c:48: while
-	BRA	L00110		jump to while condition
-L00109	EQU	*		while body
-* Line lz77.c:49: post-increment
-	LDX	-4,U		variable `k', declared at lz77.c:49
+* Line lz77.c:104: while
+	BRA	L00114		jump to while condition
+L00113	EQU	*		while body
+* Line lz77.c:105: post-increment
+	LDX	-4,U		variable `k', declared at lz77.c:105
 	LEAX	1,X
 	STX	-4,U
-L00110	EQU	*		while condition at lz77.c:48
+L00114	EQU	*		while condition at lz77.c:104
 	LDB	15,U		variable aHeadSize
 	ADDB	#$FF		255
 	CLRA			promotion of binary operand
 * optim: optimize16BitCompares
 * optim: optimize16BitCompares
 	CMPD	-4,U		optim: optimize16BitCompares
-	BLS	L00111		optim: optimize16BitCompares (optim: condBranchOverUncondBranch)
+	BLS	L00115		optim: optimize16BitCompares (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00112 removed
+* Useless label L00116 removed
 	LDD	12,U		variable startAHead
 	ADDD	-4,U		variable k
 	LDX	6,U		pointer input
@@ -346,17 +346,17 @@ L00110	EQU	*		while condition at lz77.c:48
 * optimizeLoadDX
 	LDB	D,X		get r-value
 	CMPB	,S+		compare with LSB
-	BEQ	L00109
+	BEQ	L00113
 * optim: branchToNextLocation
-L00111	EQU	*		after end of while starting at lz77.c:48
-* Line lz77.c:52: if
+L00115	EQU	*		after end of while starting at lz77.c:104
+* Line lz77.c:108: if
 	LDD	-4,U		variable k
 	CMPD	-2,U		variable maxK
-	BLE	L00099		 (optim: condBranchOverUncondBranch)
+	BLE	L00103		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00113 removed
-* Line lz77.c:52
-* Line lz77.c:53: assignment: =
+* Useless label L00117 removed
+* Line lz77.c:108
+* Line lz77.c:109: assignment: =
 	LDD	-8,U		variable i
 	SUBD	-6,U		variable j
 * Cast from `int' to byte: result already in B
@@ -364,14 +364,14 @@ L00111	EQU	*		after end of while starting at lz77.c:48
 * optim: optimizeLeax
 * optim: stripExtraPushPullB
 	STB	-12,U		optim: optimizeLeax
-* Line lz77.c:54: assignment: =
-	LDD	-4,U		variable `k', declared at lz77.c:33
+* Line lz77.c:110: assignment: =
+	LDD	-4,U		variable `k', declared at lz77.c:89
 * Cast from `int' to byte: result already in B
 * optim: stripExtraPushPullB
 * optim: optimizeLeax
 * optim: stripExtraPushPullB
 	STB	-11,U		optim: optimizeLeax
-* Line lz77.c:55: assignment: =
+* Line lz77.c:111: assignment: =
 	LDD	12,U		variable startAHead
 	ADDD	-4,U		variable k
 	LDX	6,U		pointer input
@@ -381,23 +381,23 @@ L00111	EQU	*		after end of while starting at lz77.c:48
 * optim: optimizeLeax
 * optim: stripExtraPushPullB
 	STB	-10,U		optim: optimizeLeax
-* Line lz77.c:56: assignment: =
+* Line lz77.c:112: assignment: =
 * optim: stripConsecutiveLoadsToSameReg
 	LDD	-4,U
 	STD	-2,U
-* Useless label L00114 removed
-* Useless label L00115 removed
-	BRA	L00099		break
-L00108	EQU	*		else clause of if() started at lz77.c:46
-* Useless label L00116 removed
-* Useless label L00098 removed
-* Line lz77.c:37: for increment(s)
+* Useless label L00118 removed
+* Useless label L00119 removed
+	BRA	L00103		break
+L00112	EQU	*		else clause of if() started at lz77.c:102
+* Useless label L00120 removed
+* Useless label L00102 removed
+* Line lz77.c:93: for increment(s)
 	LDD	-8,U
 	ADDD	#1
 	STD	-8,U
-L00097	EQU	*
-* Line lz77.c:37: for condition
-	LDB	15,U		variable `aHeadSize', declared at lz77.c:23
+L00101	EQU	*
+* Line lz77.c:93: for condition
+	LDB	15,U		variable `aHeadSize', declared at lz77.c:79
 	CLRA			promotion of binary operand
 	ADDD	12,U		optim: pushDLoadAdd
 * 
@@ -405,31 +405,31 @@ L00097	EQU	*
 * optim: optimize16BitCompares
 * optim: optimize16BitCompares
 	CMPD	-8,U		optim: optimize16BitCompares
-	LBGT	L00096		optim: optimize16BitCompares
+	LBGT	L00100		optim: optimize16BitCompares
 * optim: branchToNextLocation
-L00099	EQU	*		end for
-* Line lz77.c:63: post-increment
-	LDX	8,U		variable `startDicIndex', declared at lz77.c:63
+L00103	EQU	*		end for
+* Line lz77.c:119: post-increment
+	LDX	8,U		variable `startDicIndex', declared at lz77.c:119
 	LEAX	1,X
 	STX	8,U
-L00094	EQU	*		while condition at lz77.c:35
+L00098	EQU	*		while condition at lz77.c:91
 	LDD	8,U		variable startDicIndex
 	CMPD	10,U		variable stopDicIndex
-	LBLT	L00093
+	LBLT	L00097
 * optim: branchToNextLocation
-* Useless label L00095 removed
-* Line lz77.c:65: return struct/union by value
-	LEAX	-12,U		variable `t', declared at lz77.c:31
+* Useless label L00099 removed
+* Line lz77.c:121: return struct/union by value
+	LEAX	-12,U		variable `t', declared at lz77.c:87
 	PSHS	X		source struct/union
 	LDX	4,U		address of return value
 	LDD	#3		size of struct tupleStruct
 	LBSR	copyMem
 	LEAS	2,S		discard copyMem argument
 * optim: branchToNextLocation
-L00080	EQU	*		end of findInDic()
+L00084	EQU	*		end of findInDic()
 	LEAS	,U
 	PULS	U,PC
-* END FUNCTION findInDic(): defined at lz77.c:23
+* END FUNCTION findInDic(): defined at lz77.c:79
 funcend_findInDic	EQU *
 funcsize_findInDic	EQU	funcend_findInDic-_findInDic
 _fromEmittedTuple	EXPORT
@@ -479,12 +479,53 @@ _fromEmittedTuple	EQU	*
 * optim: optimizeLeax
 * optim: stripExtraPushPullB
 	STB	2,X		optim: optimizeLeax
-* Useless label L00079 removed
+* Useless label L00080 removed
 	LEAS	,U
 	PULS	U,PC
 * END FUNCTION fromEmittedTuple(): defined at lz77.c:16
 funcend_fromEmittedTuple	EQU *
 funcsize_fromEmittedTuple	EQU	funcend_fromEmittedTuple-_fromEmittedTuple
+_initBitField	EXPORT
+
+
+*******************************************************************************
+
+* FUNCTION initBitField(): defined at lz77.c:23
+_initBitField	EQU	*
+* Calling convention: Default
+	PSHS	U
+	LEAU	,S
+* Formal parameter(s):
+*      4,U:    2 bytes: bf: struct bitFieldStruct *
+*      6,U:    2 bytes: buf: unsigned char *
+* Line lz77.c:25: assignment: =
+	CLRA
+	LDB	#$07		decimal 7 signed
+* optim: stripExtraPushPullB
+	LDX	4,U		variable bf
+* optim: optimizeLeax
+* optim: stripExtraPushPullB
+	STB	4,X		optim: optimizeLeax
+* Line lz77.c:26: assignment: =
+* optim: stripExtraClrA_B
+	CLRB
+* optim: stripUselessPushPull
+	LDX	4,U		variable bf
+* optim: optimizeLeax
+* optim: stripUselessPushPull
+	STD	2,X		optim: optimizeLeax
+* Line lz77.c:27: assignment: =
+	LDD	6,U		variable `buf', declared at lz77.c:23
+* optim: stripUselessPushPull
+* optim: optimizeLdx
+* optim: stripUselessPushPull
+	STD	[4,U]		optim: optimizeLdx
+* Useless label L00081 removed
+	LEAS	,U
+	PULS	U,PC
+* END FUNCTION initBitField(): defined at lz77.c:23
+funcend_initBitField	EQU *
+funcsize_initBitField	EQU	funcend_initBitField-_initBitField
 _isalnum	IMPORT
 _isalpha	IMPORT
 _isdigit	IMPORT
@@ -507,7 +548,128 @@ _putchar	IMPORT
 _putstr	IMPORT
 _qsort	IMPORT
 _rand	IMPORT
-_readbits	IMPORT
+_readbits	EXPORT
+
+
+*******************************************************************************
+
+* FUNCTION readbits(): defined at lz77.c:57
+_readbits	EQU	*
+* Calling convention: Default
+	PSHS	U
+	LEAU	,S
+	LEAS	-6,S
+* Formal parameter(s):
+*      4,U:    2 bytes: bf: struct bitFieldStruct *
+*      7,U:    1 byte : bitCount: unsigned char
+* Local non-static variable(s):
+*     -6,U:    1 byte : mask: unsigned char
+*     -5,U:    2 bytes: value: unsigned int
+*     -3,U:    2 bytes: currentBit: unsigned int
+*     -1,U:    1 byte : bitSet: unsigned char
+* Line lz77.c:60: init of variable mask
+	CLR	-6,U		variable mask
+* Line lz77.c:61: init of variable value
+	CLRA
+	CLRB
+	STD	-5,U		variable value
+* Line lz77.c:62: init of variable currentBit
+* optim: stripExtraClrA_B
+* optim: stripExtraClrA_B
+	STD	-3,U		variable currentBit
+* Line lz77.c:63: init of variable bitSet
+	CLR	-1,U		variable bitSet
+* Line lz77.c:64: while
+	LBRA	L00122		jump to while condition
+L00121	EQU	*		while body
+* Line lz77.c:65: assignment: =
+	CLRA
+	LDB	#$01		decimal 1 signed
+	PSHS	B,A		left side of shift: used and popped by shiftLeft
+	LDX	4,U		variable bf
+	LDB	4,X		member bitLeft of bitFieldStruct
+* optim: stripExtraClrA_B
+	LBSR	shiftLeft
+* Cast from `int' to byte: result already in B
+	STB	-6,U
+* Line lz77.c:66: assignment: =
+* optim: storeLoad
+	PSHS	B
+	LDX	4,U		variable bf
+	LDD	2,X		member currentIndex of bitFieldStruct
+	PSHS	B,A		preserve array index
+	LDX	4,U		variable bf
+	LDD	,X		member buffer of bitFieldStruct
+	ADDD	,S++		add stacked array index to array address in D
+	TFR	D,X		put resulting address in X
+	LDB	,X		get r-value
+	ANDB	,S+
+	PSHS	B		left side of shift: used and popped by shiftByteRightUnsigned
+	LDX	4,U		variable bf
+	LDB	4,X		member bitLeft of bitFieldStruct
+	CLRA
+	LBSR	shiftByteRightUnsigned
+	CLRA
+	STD	-3,U
+* Line lz77.c:67: assignment: |=
+* optim: storeLoad
+	PSHS	B,A		left side of shift: used and popped by shiftLeft
+	LDB	-1,U		variable `bitSet', declared at lz77.c:63
+* optim: stripExtraClrA_B
+	LBSR	shiftLeft
+	PSHS	B,A
+	LEAX	-5,U
+	LDD	,S++
+	ORA	,X
+	ORB	1,X
+	STD	,X
+* Line lz77.c:68: post-decrement
+	DEC	7,U
+* Line lz77.c:69: post-increment
+	INC	-1,U
+* Line lz77.c:70: post-decrement
+	LDX	4,U		variable bf
+* optim: optimizeLeax
+	DEC	4,X		optim: optimizeLeax
+* Line lz77.c:71: if
+	LDX	4,U		variable bf
+	LDB	4,X		member bitLeft of bitFieldStruct
+	CMPB	#0
+	BGE	L00125		 (optim: condBranchOverUncondBranch)
+* optim: condBranchOverUncondBranch
+* Useless label L00124 removed
+* Line lz77.c:71
+* Line lz77.c:72: assignment: =
+	CLRA
+* LDB #$07 optim: optimizeStackOperations1
+* PSHS B optim: optimizeStackOperations1
+	LDX	4,U		variable bf
+* optim: optimizeLeax
+	LDB	#7		optim: optimizeStackOperations1
+	STB	4,X		optim: optimizeLeax
+* Line lz77.c:73: post-increment
+	LDX	4,U		variable bf
+	LEAX	2,X		member currentIndex of bitFieldStruct
+	LDD	,X
+	ADDD	#1
+	STD	,X
+L00125	EQU	*		else clause of if() started at lz77.c:71
+* Useless label L00126 removed
+L00122	EQU	*		while condition at lz77.c:64
+	LDB	7,U		variable `bitCount', declared at lz77.c:57
+* optim: loadCmpZeroBeqOrBne
+	LBNE	L00121
+* optim: branchToNextLocation
+* Useless label L00123 removed
+* Line lz77.c:76: return with value
+	LDD	-5,U		variable `value', declared at lz77.c:61
+* optim: branchToNextLocation
+* Useless label L00083 removed
+	LEAS	,U
+	PULS	U,PC
+* END FUNCTION readbits(): defined at lz77.c:57
+funcend_readbits	EQU *
+funcsize_readbits	EQU	funcend_readbits-_readbits
 _readline	IMPORT
 _readword	IMPORT
 _sbrk	IMPORT
@@ -580,7 +742,7 @@ _toEmittedTuple	EQU	*
 * optim: optimizeLeax
 * optim: stripExtraPushPullB
 	STB	1,X		optim: optimizeLeax
-* Useless label L00078 removed
+* Useless label L00079 removed
 	LEAS	,U
 	PULS	U,PC
 * END FUNCTION toEmittedTuple(): defined at lz77.c:9
@@ -594,7 +756,7 @@ _uncompress	EXPORT
 
 *******************************************************************************
 
-* FUNCTION uncompress(): defined at lz77.c:95
+* FUNCTION uncompress(): defined at lz77.c:151
 _uncompress	EQU	*
 * Calling convention: Default
 	PSHS	U
@@ -610,28 +772,28 @@ _uncompress	EQU	*
 *     -7,U:    3 bytes: t: struct tupleStruct
 *     -4,U:    2 bytes: inputIdx: int
 *     -2,U:    2 bytes: outputIdx: int
-* Line lz77.c:97: init of variable inputIdx
+* Line lz77.c:153: init of variable inputIdx
 	CLRA
 	CLRB
 	STD	-4,U		variable inputIdx
-* Line lz77.c:97: init of variable outputIdx
+* Line lz77.c:153: init of variable outputIdx
 * optim: stripExtraClrA_B
 * optim: stripExtraClrA_B
 	STD	-2,U		variable outputIdx
-* Line lz77.c:98: function call: memset()
-	LDD	10,U		variable `oSize', declared at lz77.c:95
+* Line lz77.c:154: function call: memset()
+	LDD	10,U		variable `oSize', declared at lz77.c:151
 	PSHS	B,A		argument 3 of memset(): int
 	CLRA
 	CLRB
 	PSHS	B,A		argument 2 of memset(): int
-	LDD	8,U		variable `output', declared at lz77.c:95
+	LDD	8,U		variable `output', declared at lz77.c:151
 	PSHS	B,A		argument 1 of memset(): unsigned char *
 	LBSR	_memset
 	LEAS	6,S
-* Line lz77.c:100: while
-	LBRA	L00118		jump to while condition
-L00117	EQU	*		while body
-* Line lz77.c:102: init of variable q
+* Line lz77.c:156: while
+	LBRA	L00128		jump to while condition
+L00127	EQU	*		while body
+* Line lz77.c:158: init of variable q
 	LDD	-4,U		variable inputIdx
 	LDX	4,U		pointer input
 * optimizeLoadDX
@@ -643,21 +805,21 @@ L00117	EQU	*		while body
 * optimizeLoadDX
 	LDB	D,X		get r-value
 	STB	-8,U		offset in variable q
-* Line lz77.c:104: function call: fromEmittedTuple()
+* Line lz77.c:160: function call: fromEmittedTuple()
 	LEAY	-7,U		optim: transformPshsXPshsX
 * optim: optimizePshsOps
-	LEAX	-9,U		variable `q', declared at lz77.c:102
+	LEAX	-9,U		variable `q', declared at lz77.c:158
 	PSHS	Y,X		optim: optimizePshsOps
 	LBSR	_fromEmittedTuple
 	LEAS	4,S
-* Line lz77.c:106: if
+* Line lz77.c:162: if
 	LDB	-7,U		member d of tupleStruct, via variable t
 * optim: loadCmpZeroBeqOrBne
-	BEQ	L00121		 (optim: condBranchOverUncondBranch)
+	BEQ	L00131		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00120 removed
-* Line lz77.c:106
-* Line lz77.c:107: function call: memcpy()
+* Useless label L00130 removed
+* Line lz77.c:162
+* Line lz77.c:163: function call: memcpy()
 	LDB	-6,U		member l of tupleStruct, via variable t
 	CLRA			promoting byte argument to word
 	PSHS	B,A		argument 3 of memcpy(): unsigned char
@@ -666,30 +828,30 @@ L00117	EQU	*		while body
 	PSHS	B,A
 * optim: optimizeStackOperations4
 * optim: optimizeStackOperations4
-	LDD	8,U		variable `output', declared at lz77.c:95
+	LDD	8,U		variable `output', declared at lz77.c:151
 	ADDD	-2,U		optim: optimizeStackOperations4
 	SUBD	,S++
 	PSHS	B,A		argument 2 of memcpy(): unsigned char *
 * optim: optimizeStackOperations4
 * optim: optimizeStackOperations4
-	LDD	8,U		variable `output', declared at lz77.c:95
+	LDD	8,U		variable `output', declared at lz77.c:151
 	ADDD	-2,U		optim: optimizeStackOperations4
 	PSHS	B,A		argument 1 of memcpy(): unsigned char *
 	LBSR	_memcpy
 	LEAS	6,S
-* Line lz77.c:108: assignment: +=
+* Line lz77.c:164: assignment: +=
 	LDB	-6,U		member l of tupleStruct, via variable t
 	CLRA
 	ADDD	-2,U		optim: pushDLoadAdd
 * 
 * 
 	STD	-2,U
-L00121	EQU	*		else clause of if() started at lz77.c:106
-* Useless label L00122 removed
-* Line lz77.c:111: assignment: =
+L00131	EQU	*		else clause of if() started at lz77.c:162
+* Useless label L00132 removed
+* Line lz77.c:167: assignment: =
 	LDB	-5,U		member c of tupleStruct, via variable t
 	PSHS	B
-	LDD	-2,U		variable `outputIdx', declared at lz77.c:111
+	LDD	-2,U		variable `outputIdx', declared at lz77.c:167
 	ADDD	#1
 	STD	-2,U
 	SUBD	#1		post increment yields initial value
@@ -697,29 +859,189 @@ L00121	EQU	*		else clause of if() started at lz77.c:106
 	LEAX	D,X		add offset
 	LDB	,S+
 	STB	,X
-* Line lz77.c:116: assignment: +=
+* Line lz77.c:172: assignment: +=
 	LDD	-4,U		variable inputIdx
-	ADDD	#$02		+= operator at lz77.c:116
+	ADDD	#$02		+= operator at lz77.c:172
 	STD	-4,U
-L00118	EQU	*		while condition at lz77.c:100
+L00128	EQU	*		while condition at lz77.c:156
 	LDD	-4,U		variable inputIdx
 	CMPD	6,U		variable iSize
-	LBLT	L00117
+	LBLT	L00127
 * optim: branchToNextLocation
-* Useless label L00119 removed
-* Line lz77.c:118: return with value
-	LDD	-2,U		variable `outputIdx', declared at lz77.c:97
+* Useless label L00129 removed
+* Line lz77.c:174: return with value
+	LDD	-2,U		variable `outputIdx', declared at lz77.c:153
 * optim: branchToNextLocation
-* Useless label L00082 removed
+* Useless label L00086 removed
 	LEAS	,U
 	PULS	U,PC
-* END FUNCTION uncompress(): defined at lz77.c:95
+* END FUNCTION uncompress(): defined at lz77.c:151
 funcend_uncompress	EQU *
 funcsize_uncompress	EQU	funcend_uncompress-_uncompress
 _utoa10	IMPORT
 _vprintf	IMPORT
 _vsprintf	IMPORT
-_writebits	IMPORT
+_writebits	EXPORT
+
+
+*******************************************************************************
+
+* FUNCTION writebits(): defined at lz77.c:30
+_writebits	EQU	*
+* Calling convention: Default
+	PSHS	U
+	LEAU	,S
+	LEAS	-2,S
+* Formal parameter(s):
+*      4,U:    2 bytes: bf: struct bitFieldStruct *
+*      6,U:    2 bytes: value: unsigned int
+*      9,U:    1 byte : bitCount: unsigned char
+* Local non-static variable(s):
+*     -2,U:    1 byte : i: unsigned char
+*     -1,U:    1 byte : bitSet: unsigned char
+* Line lz77.c:34: init of variable bitSet
+	CLR	-1,U		variable bitSet
+* Line lz77.c:35: while
+	LBRA	L00134		jump to while condition
+L00133	EQU	*		while body
+* Line lz77.c:36: init of variable currentBit
+	LDD	6,U		variable value
+	CLRA			optim: andA_B0
+	ANDB	#$01
+* Cast from `unsigned int' to byte: result already in B
+	STB	-2,U		variable currentBit
+* Line lz77.c:37: assignment: |=
+* optim: storeLoad
+	PSHS	B		left side of shift: used and popped by shiftByteLeft
+	LDX	4,U		variable bf
+	LDB	4,X		member bitLeft of bitFieldStruct
+* optim: stripExtraClrA_B
+	LBSR	shiftByteLeft
+	PSHS	B
+	LDX	4,U		variable bf
+	LDD	2,X		member currentIndex of bitFieldStruct
+	PSHS	B,A		preserve array index
+	LDX	4,U		variable bf
+	LDD	,X		member buffer of bitFieldStruct
+	ADDD	,S++		add stacked array index to array address in D
+	TFR	D,X		put resulting address in X
+	LDB	,X
+	ORB	,S+
+	STB	,X
+* Line lz77.c:38: post-decrement
+	LDX	4,U		variable bf
+* optim: optimizeLeax
+	DEC	4,X		optim: optimizeLeax
+* Line lz77.c:39: if
+	LDX	4,U		variable bf
+	LDB	4,X		member bitLeft of bitFieldStruct
+	CMPB	#0
+	BGE	L00137		 (optim: condBranchOverUncondBranch)
+* optim: condBranchOverUncondBranch
+* Useless label L00136 removed
+* Line lz77.c:39
+* Line lz77.c:40: assignment: =
+	CLRA
+* LDB #$07 optim: optimizeStackOperations1
+* PSHS B optim: optimizeStackOperations1
+	LDX	4,U		variable bf
+* optim: optimizeLeax
+	LDB	#7		optim: optimizeStackOperations1
+	STB	4,X		optim: optimizeLeax
+* Line lz77.c:41: post-increment
+	LDX	4,U		variable bf
+	LEAX	2,X		member currentIndex of bitFieldStruct
+	LDD	,X
+	ADDD	#1
+	STD	,X
+L00137	EQU	*		else clause of if() started at lz77.c:39
+* Useless label L00138 removed
+* Line lz77.c:43: post-increment
+	INC	-1,U
+* Line lz77.c:44: assignment: =
+	LDD	6,U		variable `value', declared at lz77.c:30
+	LSRA
+	RORB
+	STD	6,U
+L00134	EQU	*		while condition at lz77.c:35
+	LDD	6,U		variable `value', declared at lz77.c:30
+* optim: loadCmpZeroBeqOrBne
+	LBNE	L00133
+* optim: branchToNextLocation
+* Useless label L00135 removed
+* Line lz77.c:46: for init
+* Line lz77.c:46: init of variable i
+	CLR	-2,U		variable i
+	BRA	L00140		jump to for condition
+L00139	EQU	*
+* Line lz77.c:46: for body
+* Line lz77.c:47: assignment: |=
+	CLRA
+	CLRB
+	PSHS	B,A		left side of shift: used and popped by shiftLeft
+	LDX	4,U		variable bf
+	LDB	4,X		member bitLeft of bitFieldStruct
+* optim: stripExtraClrA_B
+	LBSR	shiftLeft
+* Cast from `int' to byte: result already in B
+	PSHS	B
+	LDX	4,U		variable bf
+	LDD	2,X		member currentIndex of bitFieldStruct
+	PSHS	B,A		preserve array index
+	LDX	4,U		variable bf
+	LDD	,X		member buffer of bitFieldStruct
+	ADDD	,S++		add stacked array index to array address in D
+	TFR	D,X		put resulting address in X
+	LDB	,X
+	ORB	,S+
+	STB	,X
+* Line lz77.c:48: post-decrement
+	LDX	4,U		variable bf
+* optim: optimizeLeax
+	DEC	4,X		optim: optimizeLeax
+* Line lz77.c:49: if
+	LDX	4,U		variable bf
+	LDB	4,X		member bitLeft of bitFieldStruct
+	CMPB	#0
+	BGE	L00144		 (optim: condBranchOverUncondBranch)
+* optim: condBranchOverUncondBranch
+* Useless label L00143 removed
+* Line lz77.c:49
+* Line lz77.c:50: assignment: =
+	CLRA
+* LDB #$07 optim: optimizeStackOperations1
+* PSHS B optim: optimizeStackOperations1
+	LDX	4,U		variable bf
+* optim: optimizeLeax
+	LDB	#7		optim: optimizeStackOperations1
+	STB	4,X		optim: optimizeLeax
+* Line lz77.c:51: post-increment
+	LDX	4,U		variable bf
+	LEAX	2,X		member currentIndex of bitFieldStruct
+	LDD	,X
+	ADDD	#1
+	STD	,X
+L00144	EQU	*		else clause of if() started at lz77.c:49
+* Useless label L00145 removed
+* Useless label L00141 removed
+* Line lz77.c:46: for increment(s)
+	INC	-2,U
+L00140	EQU	*
+* Line lz77.c:46: for condition
+	LDB	9,U		variable bitCount
+	SUBB	-1,U		variable bitSet
+	PSHS	B
+	LDB	-2,U		variable `i', declared at lz77.c:46
+	CMPB	,S+		compare with LSB
+	LBLO	L00139
+* optim: branchToNextLocation
+* Useless label L00142 removed
+* Useless label L00082 removed
+	LEAS	,U
+	PULS	U,PC
+* END FUNCTION writebits(): defined at lz77.c:30
+funcend_writebits	EQU *
+funcsize_writebits	EQU	funcend_writebits-_writebits
 _zerodw	IMPORT
 
 
@@ -788,10 +1110,13 @@ bss_end	EQU	*
 
 *******************************************************************************
 
-* Importing 3 utility routine(s).
+* Importing 6 utility routine(s).
 _memcpy	IMPORT
 _memset	IMPORT
 copyMem	IMPORT
+shiftByteLeft	IMPORT
+shiftByteRightUnsigned	IMPORT
+shiftLeft	IMPORT
 
 
 *******************************************************************************

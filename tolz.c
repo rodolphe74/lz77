@@ -47,6 +47,45 @@ asm {
 
 int main(/*int argc, char *argv[]*/)
 {
+    #define VAL_COUNT 256
+    BitField bf;
+    UCHAR bitsMax[VAL_COUNT];
+    UINT values[VAL_COUNT];
+    UINT retrievedValues[VAL_COUNT];
+    UCHAR buffer[VAL_COUNT * 15];
+    memset(buffer, 0, VAL_COUNT * 15);
+    initBitField(&bf, buffer);
+    printf("randomizing %d values%c%c", VAL_COUNT, 10, 13);
+    for (int i = 0; i < VAL_COUNT; i++) {
+        bitsMax[i] = (UCHAR) (rand() % 14 + 1);
+        values[i] = rand() % (1 << bitsMax[i]);
+        // printf("randomized %d on %d%c%c", values[i], bitsMax[i], 10, 13);
+    }
+    printf("\n");
+    printf("writing %d values%c%c", VAL_COUNT, 10, 13);
+    for (int i = 0; i < VAL_COUNT; i++) {
+        // printf("write %d on %d bits%c%c", values[i], bitsMax[i], 10, 13);
+        writebits(&bf, values[i], bitsMax[i]);
+    }
+    initBitField(&bf, buffer);
+    printf("reading %d values%c%c", VAL_COUNT, 10, 13);
+    for (int i = 0; i < VAL_COUNT; i++) {
+        UINT v = readbits(&bf, bitsMax[i]);
+        // printf("read %d on %d bits%c%c", v, bitsMax[i], 10, 13);
+        retrievedValues[i] = v;
+    }
+    printf("comparing %d values%c%c", VAL_COUNT, 10, 13);
+    int ja = 1;
+    for (int i = 0; i < VAL_COUNT; i++) {
+        if (values[i] != retrievedValues[i]) {
+            ja = 0;
+            break;
+        }
+    }
+    if (ja) printf("schön%c%c", 10, 13);
+    exit(0);
+
+
     _160();
     _PALETTE(fouAPi00.pal);
 
@@ -120,3 +159,4 @@ int main(/*int argc, char *argv[]*/)
     // printf("All good!%c%c", 10, 13);
     return 0;
 }
+

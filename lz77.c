@@ -27,13 +27,13 @@ void initBitField(BitField *bf, UCHAR *buf)
     bf->buffer = buf;
 }
 
-void writebits(BitField *bf, UCHAR value, UCHAR bitCount)
+void writebits(BitField *bf, UINT value, UCHAR bitCount)
 {
     // value must fit in bitCount !
     // little endian notation (last bit stored first)
-    int bitSet = 0;
+    UCHAR bitSet = 0;
     while (value) {
-        UCHAR currentBit = (value & 1);
+        UCHAR currentBit = (UCHAR) (value & 1);
         bf->buffer[bf->currentIndex] |= currentBit << (bf->bitLeft);
         bf->bitLeft--;
         if (bf->bitLeft < 0) {
@@ -43,27 +43,35 @@ void writebits(BitField *bf, UCHAR value, UCHAR bitCount)
         bitSet++;
         value = value >> 1;
     }
-    for (int i = 0; i < bitCount - bitSet; i++) {
-        bf->buffer[bf->currentIndex] |= 0 << (bf->bitLeft);
+    for (UCHAR i = 0; i < bitCount - bitSet; i++) {
+        bf->buffer[bf->currentIndex] |= (UCHAR) (0 << (bf->bitLeft));
         bf->bitLeft--;
         if (bf->bitLeft < 0) {
             bf->bitLeft = 7;
             bf->currentIndex++;
         }
     }
-    printf("%d\n", bf->buffer[bf->currentIndex]);
+    // printf("%d\n", bf->buffer[bf->currentIndex]);
 }
 
-UCHAR readbits(BitField bf, UCHAR bitCount)
+UINT readbits(BitField *bf, UCHAR bitCount)
 {
     // little endian notation (last bit stored first)
-    UCHAR mask = 1;
-    UCHAR value = 0;
+    UCHAR mask = 0;
+    UINT value = 0;
+    UINT currentBit = 0;
+    UCHAR bitSet = 0;
     while (bitCount) {
-        UCHAR currentBit = bf.buffer[bf.currentIndex] & mask;
-        value |= currentBit << bitCount;
-        mask = mask >> 1;
+        mask = (UCHAR) (1 << bf->bitLeft);
+        currentBit = (bf->buffer[bf->currentIndex] & mask) >> bf->bitLeft;
+        value |= currentBit << bitSet;
         bitCount--;
+        bitSet++;
+        bf->bitLeft--;
+        if (bf->bitLeft < 0) {
+            bf->bitLeft = 7;
+            bf->currentIndex++;
+        }
     }
     return value;
 }
