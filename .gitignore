@@ -34,3 +34,4 @@
 build/
 .comments/
 .kdev4/
+.cache/**
