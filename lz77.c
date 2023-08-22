@@ -33,7 +33,7 @@ void writebits(BitField *bf, UINT value, UCHAR bitCount)
     // little endian notation (last bit stored first)
     UCHAR bitSet = 0;
     while (value) {
-        UCHAR currentBit = (UCHAR) (value & 1);
+        UCHAR currentBit = (UCHAR)(value & 1);
         bf->buffer[bf->currentIndex] |= currentBit << (bf->bitLeft);
         bf->bitLeft--;
         if (bf->bitLeft < 0) {
@@ -44,7 +44,7 @@ void writebits(BitField *bf, UINT value, UCHAR bitCount)
         value = value >> 1;
     }
     for (UCHAR i = 0; i < bitCount - bitSet; i++) {
-        bf->buffer[bf->currentIndex] |= (UCHAR) (0 << (bf->bitLeft));
+        bf->buffer[bf->currentIndex] |= (UCHAR)(0 << (bf->bitLeft));
         bf->bitLeft--;
         if (bf->bitLeft < 0) {
             bf->bitLeft = 7;
@@ -62,7 +62,7 @@ UINT readbits(BitField *bf, UCHAR bitCount)
     UINT currentBit = 0;
     UCHAR bitSet = 0;
     while (bitCount) {
-        mask = (UCHAR) (1 << bf->bitLeft);
+        mask = (UCHAR)(1 << bf->bitLeft);
         currentBit = (bf->buffer[bf->currentIndex] & mask) >> bf->bitLeft;
         value |= currentBit << bitSet;
         bitCount--;
@@ -106,7 +106,7 @@ Tuple findInDic(UCHAR *input, INT startDicIndex, INT stopDicIndex, INT startAHea
 
                 // printf("  k=%d\n", k);
                 if (k > maxK) {
-                    t.d = (UCHAR) (i - j);   // WARNING
+                    t.d = (UCHAR)(i - j);    // WARNING
                     t.l = (UCHAR) k;         // WARNING
                     t.c = input[startAHead + k];    // TODO check overflow
                     maxK = k;
@@ -122,106 +122,74 @@ Tuple findInDic(UCHAR *input, INT startDicIndex, INT stopDicIndex, INT startAHea
 }
 
 // current and soon old method
-INT compress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
-{
-    // printf("message size:%d\n", iSize);
-    INT index = 0;
-    INT dicIndexStart = 0, dicIndexStop = 0;
-    // INT stopIndex = index + AHEAD_SIZE;
-    INT outputIdx = 0;
-    while (index < iSize) {
-
-        dicIndexStart = (index /*- 1*/ -  DIC_SIZE) < 0 ? 0 : (index /*- 1*/ -  DIC_SIZE);
-        dicIndexStop = index;
-
-        // printf("index:%d  -  c:%c(%d)  -  dicIndexStart:%d   -  dicIndexStop:%d\n", index, (char)input[index], input[index], dicIndexStart, dicIndexStop);
-
-        Tuple t = {0, 0, 0};
-        t = findInDic(input, dicIndexStart, dicIndexStop, index, AHEAD_SIZE);
-        // printf("  t=%d,%d,%c(%d)\n", t.d, t.l, (char) t.c, t.c);
-        EmittedTuple q;
-        toEmittedTuple(&t, &q);
-        memcpy(output + outputIdx, &q, sizeof(q));
-        outputIdx += sizeof(q);
-
-        index += 1 + t.l;
-    }
-    return outputIdx;
-}
-
-// Under development
 // INT compress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
 // {
-//     memset(output, 0, oSize);   // uber wichtig !
-//     BitField bf;
-//     initBitField(&bf, output);
-//
+//     // printf("message size:%d\n", iSize);
 //     INT index = 0;
 //     INT dicIndexStart = 0, dicIndexStop = 0;
+//     // INT stopIndex = index + AHEAD_SIZE;
+//     INT outputIdx = 0;
 //     while (index < iSize) {
 //
 //         dicIndexStart = (index /*- 1*/ -  DIC_SIZE) < 0 ? 0 : (index /*- 1*/ -  DIC_SIZE);
 //         dicIndexStop = index;
 //
+//         // printf("index:%d  -  c:%c(%d)  -  dicIndexStart:%d   -  dicIndexStop:%d\n", index, (char)input[index], input[index], dicIndexStart, dicIndexStop);
+//
 //         Tuple t = {0, 0, 0};
 //         t = findInDic(input, dicIndexStart, dicIndexStop, index, AHEAD_SIZE);
-//
 //         // printf("  t=%d,%d,%c(%d)\n", t.d, t.l, (char) t.c, t.c);
-//
-//         writebits(&bf, t.d, DIC_BIT_SIZE);
-//         writebits(&bf, t.l, AHEAD_BIT_SIZE);
-//         writebits(&bf, t.c, CHAR_BIT_SIZE);
+//         EmittedTuple q;
+//         toEmittedTuple(&t, &q);
+//         memcpy(output + outputIdx, &q, sizeof(q));
+//         outputIdx += sizeof(q);
 //
 //         index += 1 + t.l;
 //     }
-//     printf("bf.currentIndex:%d\n", bf.currentIndex);
-//     return bf.currentIndex;
+//     return outputIdx;
 // }
 
-
-// current and soon old method
-INT uncompress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
+// Under development
+INT compress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
 {
-    INT inputIdx = 0, outputIdx = 0;
-    memset(output, 0, oSize);
+    memset(output, 0, oSize);   // uber wichtig !
+    BitField bf;
+    initBitField(&bf, output);
 
-    while (inputIdx < iSize) {
-        // tuple t = {input[inputIdx], input[inputIdx + 1], input[inputIdx + 2]};
-        EmittedTuple q = {input[inputIdx], input[inputIdx + 1]};
-        Tuple t;
-        fromEmittedTuple(&q, &t);
+    INT index = 0;
+    INT dicIndexStart = 0, dicIndexStop = 0;
+    while (index < iSize) {
 
-        if (t.d != 0) {
-            memcpy(output + outputIdx, output + outputIdx - t.d, t.l);
-            outputIdx += t.l;
-        }
+        dicIndexStart = (index /*- 1*/ -  DIC_SIZE) < 0 ? 0 : (index /*- 1*/ -  DIC_SIZE);
+        dicIndexStop = index;
 
-        output[outputIdx++] = t.c;
-        // printf("buf:%s\n", output);
+        Tuple t = {0, 0, 0};
+        t = findInDic(input, dicIndexStart, dicIndexStop, index, AHEAD_SIZE);
 
-        // inputIdx += 3;
-        // inputIdx += sizeof(tuple);
-        inputIdx += sizeof(EmittedTuple);
+        // printf("  t=%d,%d,%c(%d)\n", t.d, t.l, (char) t.c, t.c);
+
+        writebits(&bf, t.d, DIC_BIT_SIZE);
+        writebits(&bf, t.l, AHEAD_BIT_SIZE);
+        writebits(&bf, t.c, CHAR_BIT_SIZE);
+
+        index += 1 + t.l;
     }
-    return outputIdx;
+    printf("bf.currentIndex:%d\n", bf.currentIndex);
+    return bf.currentIndex;
 }
 
 
-// Under development
+// current and soon old method
 // INT uncompress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
 // {
-//     BitField bf;
-//     initBitField(&bf, input);
-//     INT /*inputIdx = 0,*/ outputIdx = 0;
+//     INT inputIdx = 0, outputIdx = 0;
 //     memset(output, 0, oSize);
 //
-//     while (bf.currentIndex < iSize) {
-//
+//     while (inputIdx < iSize) {
+//         // tuple t = {input[inputIdx], input[inputIdx + 1], input[inputIdx + 2]};
+//         EmittedTuple q = {input[inputIdx], input[inputIdx + 1]};
 //         Tuple t;
-//         t.d = (UCHAR) readbits(&bf, DIC_BIT_SIZE);
-//         t.l = (UCHAR) readbits(&bf, AHEAD_BIT_SIZE);
-//         t.c = (UCHAR) readbits(&bf, CHAR_BIT_SIZE);
-//         // printf("  t=%d,%d,%c(%d)\n", t.d, t.l, (char) t.c, t.c);
+//         fromEmittedTuple(&q, &t);
 //
 //         if (t.d != 0) {
 //             memcpy(output + outputIdx, output + outputIdx - t.d, t.l);
@@ -229,13 +197,84 @@ INT uncompress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
 //         }
 //
 //         output[outputIdx++] = t.c;
+//         // printf("buf:%s\n", output);
+//
+//         // inputIdx += 3;
+//         // inputIdx += sizeof(tuple);
+//         inputIdx += sizeof(EmittedTuple);
 //     }
 //     return outputIdx;
 // }
 
 
+// Under development
+INT uncompress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
+{
+    BitField bf;
+    initBitField(&bf, input);
+    INT /*inputIdx = 0,*/ outputIdx = 0;
+    memset(output, 0, oSize);
+
+    while (bf.currentIndex < iSize) {
+
+        Tuple t;
+        t.d = (UCHAR) readbits(&bf, DIC_BIT_SIZE);
+        t.l = (UCHAR) readbits(&bf, AHEAD_BIT_SIZE);
+        t.c = (UCHAR) readbits(&bf, CHAR_BIT_SIZE);
+        // printf("  t=%d,%d,%c(%d)\n", t.d, t.l, (char) t.c, t.c);
+
+        if (t.d != 0) {
+            memcpy(output + outputIdx, output + outputIdx - t.d, t.l);
+            outputIdx += t.l;
+        }
+
+        output[outputIdx++] = t.c;
+    }
+    return outputIdx;
+}
+
+
 
 #ifndef COMPILER_IS_CMOC
+void initBitFieldFile(BitField *bf, FILE *file)
+{
+    bf->bitLeft = 7;
+    bf->currentIndex = 0;
+    bf->file.f = file;
+    bf->file.init = 1;
+}
+
+UINT readbitsFile(BitField *bf, UCHAR bitCount, UINT *valueRead)
+{
+    // little endian notation (last bit stored first)
+    UCHAR mask = 0;
+    UINT value = 0;
+    UINT currentBit = 0;
+    UCHAR bitSet = 0;
+    UINT o = 0;
+    if (bf->file.init) {
+        // o = fread(&currentChar, 1, 1, bf->file.f);
+        o = fread(&bf->file.currentChar, 1, 1, bf->file.f);
+        bf->file.init = 0;
+    }
+    while (bitCount) {
+        mask = (UCHAR)(1 << bf->bitLeft);
+        currentBit = (bf->file.currentChar & mask) >> bf->bitLeft;
+        value |= currentBit << bitSet;
+        bitCount--;
+        bitSet++;
+        bf->bitLeft--;
+        if (bf->bitLeft < 0) {
+            bf->bitLeft = 7;
+            o = fread(&bf->file.currentChar, 1, 1, bf->file.f);
+            if (!o)
+                return 0;
+        }
+    }
+    *valueRead = value;
+    return 1;
+}
+
 void compressFile(FILE *fin, FILE *fout)
 {
     UCHAR buffer[F_BUFFER_SZ];

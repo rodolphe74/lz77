@@ -47,10 +47,18 @@ struct emittedTupleStruct {
 typedef struct emittedTupleStruct EmittedTuple;
 
 #ifndef COMPILER_IS_CMOC
+struct FileStruct
+{
+    FILE *f;
+    int init;
+    UCHAR currentChar;
+};
+typedef struct FileStruct File;
+
 struct bitFieldStruct {
     union {
         UCHAR *buffer;
-        FILE *file;
+        File file;
     };
     UINT currentIndex;
     CHAR bitLeft;
@@ -72,6 +80,8 @@ UINT readbits(BitField *bf, UCHAR bitCount);
 INT compress(UCHAR *input, INT iSize, UCHAR *output, INT oSize);
 INT uncompress(UCHAR *input, INT iSize, UCHAR *output, INT oSize);
 #ifndef COMPILER_IS_CMOC
+void initBitFieldFile(BitField *bf, FILE *file);
+UINT readbitsFile(BitField *bf, UCHAR bitCount, UINT *valueRead);
 void compressFile(FILE *fin, FILE *fout);
 void uncompressFile(FILE *fin, FILE *fout);
 #endif
