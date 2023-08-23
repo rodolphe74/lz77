@@ -14,11 +14,11 @@ int main(int argc, char *argv[])
     UCHAR bitsMax[VAL_COUNT];
     UINT values[VAL_COUNT];
     UINT retrievedValues[VAL_COUNT];
-    UCHAR buffer[VAL_COUNT * 15] = {0};
+    UCHAR buffer[VAL_COUNT * 15] = {0}; // should be large enough ((all bits from values) / 8 + 1)
     initBitField(&bf, buffer);
     printf("randomizing %d values%c%c", VAL_COUNT, 10, 13);
     for (int i = 0; i < VAL_COUNT; i++) {
-        bitsMax[i] = (UCHAR) (rand() % 14 + 1);
+        bitsMax[i] = (UCHAR)(rand() % 14 + 1);
         values[i] = rand() % (1 << bitsMax[i]);
         // printf("randomized %d on %d\n", values[i], bitsMax[i]);
     }
@@ -57,11 +57,11 @@ int main(int argc, char *argv[])
         // printf("write %d on %d bits\n", values[i], bitsMax[i]);
     }
     printf("File size:%d\n", bf.currentIndex);
-    fwrite(bf.buffer, 1, bf.currentIndex, fout);
-    fclose(fout);
+    finalizeWritebitsFile(&bf, fout);
 
     FILE *fin = fopen("test.bf", "rb");
     memset(buffer, 0, sizeof(buffer));
+    memset(retrievedValues, 0, sizeof(retrievedValues));
     initBitFieldFile(&bf, fin);
     printf("reading %d values%c%c", VAL_COUNT, 10, 13);
     UINT o = 1;
@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
     printf("comparing %d values%c%c", VAL_COUNT, 10, 13);
     for (int i = 0; i < VAL_COUNT; i++) {
         if (values[i] != retrievedValues[i]) {
+            printf("Error on %d %d != %d %c%c", i, values[i], retrievedValues[i], 10, 13);
             ja = 0;
             break;
         }

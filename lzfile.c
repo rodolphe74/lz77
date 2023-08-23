@@ -13,8 +13,8 @@
 int main(int argc, char *argv[])
 {
     // compress file test
-    FILE *fin = fopen("./fill.tiff", "rb");
-    FILE *fout = fopen("./fill.lz", "wb");
+    FILE *fin = fopen("/home/rodoc/develop/projects/lz77/maupassant3k.txt", "rb");
+    FILE *fout = fopen("/home/rodoc/develop/projects/lz77/maupassant3k.lz", "wb");
 
     if (fin == NULL || fout == NULL) {
         perror("fopen");
@@ -26,8 +26,8 @@ int main(int argc, char *argv[])
     fclose(fout);
 
     // uncompress file test
-    FILE *fin2 = fopen("./fill.lz", "rb");
-    FILE *fout2 = fopen("./fill.bck", "w+b");
+    FILE *fin2 = fopen("/home/rodoc/develop/projects/lz77/maupassant3k.lz", "rb");
+    FILE *fout2 = fopen("/home/rodoc/develop/projects/lz77/maupassant3k.bck", "w+b");
 
     if (fin2 == NULL || fout2 == NULL) {
         perror("fopen");

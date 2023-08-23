@@ -49,6 +49,7 @@ typedef struct emittedTupleStruct EmittedTuple;
 #ifndef COMPILER_IS_CMOC
 struct FileStruct
 {
+    // struct used in file decompression
     FILE *f;
     int init;
     UCHAR currentChar;
@@ -56,6 +57,8 @@ struct FileStruct
 typedef struct FileStruct File;
 
 struct bitFieldStruct {
+    // struct used on array compression/decompression (buffer)
+    // or file decompression (struct file)
     union {
         UCHAR *buffer;
         File file;
@@ -82,6 +85,7 @@ INT uncompress(UCHAR *input, INT iSize, UCHAR *output, INT oSize);
 #ifndef COMPILER_IS_CMOC
 void initBitFieldFile(BitField *bf, FILE *file);
 UINT readbitsFile(BitField *bf, UCHAR bitCount, UINT *valueRead);
+void finalizeWritebitsFile(BitField *bf, FILE *fout);
 void compressFile(FILE *fin, FILE *fout);
 void uncompressFile(FILE *fin, FILE *fout);
 #endif

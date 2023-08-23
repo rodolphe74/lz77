@@ -51,7 +51,7 @@ void writebits(BitField *bf, UINT value, UCHAR bitCount)
             bf->currentIndex++;
         }
     }
-    // printf("%d\n", bf->buffer[bf->currentIndex]);
+    // printf("currentIndex:%d(%d)\n", bf->currentIndex, bf->buffer[bf->currentIndex]);
 }
 
 UINT readbits(BitField *bf, UCHAR bitCount)
@@ -138,7 +138,7 @@ Tuple findInDic(UCHAR *input, INT startDicIndex, INT stopDicIndex, INT startAHea
 //
 //         Tuple t = {0, 0, 0};
 //         t = findInDic(input, dicIndexStart, dicIndexStop, index, AHEAD_SIZE);
-//         // printf("  t=%d,%d,%c(%d)\n", t.d, t.l, (char) t.c, t.c);
+//         printf("  t=%d,%d,%c(%d)\n", t.d, t.l, (char) t.c, t.c);
 //         EmittedTuple q;
 //         toEmittedTuple(&t, &q);
 //         memcpy(output + outputIdx, &q, sizeof(q));
@@ -174,7 +174,6 @@ INT compress(UCHAR *input, INT iSize, UCHAR *output, INT oSize)
 
         index += 1 + t.l;
     }
-    printf("bf.currentIndex:%d\n", bf.currentIndex);
     return bf.currentIndex;
 }
 
@@ -249,9 +248,11 @@ UINT readbitsFile(BitField *bf, UCHAR bitCount, UINT *valueRead)
     // little endian notation (last bit stored first)
     UCHAR mask = 0;
     UINT value = 0;
+    UINT lastValue = *valueRead;
     UINT currentBit = 0;
     UCHAR bitSet = 0;
     UINT o = 0;
+
     if (bf->file.init) {
         // o = fread(&currentChar, 1, 1, bf->file.f);
         o = fread(&bf->file.currentChar, 1, 1, bf->file.f);
@@ -261,17 +262,21 @@ UINT readbitsFile(BitField *bf, UCHAR bitCount, UINT *valueRead)
         mask = (UCHAR)(1 << bf->bitLeft);
         currentBit = (bf->file.currentChar & mask) >> bf->bitLeft;
         value |= currentBit << bitSet;
+        *valueRead = value;
         bitCount--;
         bitSet++;
         bf->bitLeft--;
         if (bf->bitLeft < 0) {
             bf->bitLeft = 7;
             o = fread(&bf->file.currentChar, 1, 1, bf->file.f);
-            if (!o)
+            if (!o) {
+                // can't read next char, value doesn't fit on bitCount, return previous value found
+                // *valueRead = lastValue;
                 return 0;
+            }
         }
     }
-    *valueRead = value;
+    // *valueRead = value;
     return 1;
 }
 
@@ -285,41 +290,102 @@ void compressFile(FILE *fin, FILE *fout)
     INT csz = 0;
     while ((read = fread(buffer, 1, sizeof(buffer), fin)) > 0) {
         fwrite(&read, sizeof(UINT), 1, fout);
-        printf("read:%d %lu\n", read, ftell(fout));
+        // printf("read:%d %lu\n", read, ftell(fout));
         csz = compress(buffer, read, cBuffer, C_F_BUFFER_SZ);
-        printf("csz:%d >%c<  >%c<\n", csz, buffer[sizeof(buffer) - 1 ], cBuffer[csz - 1]);
+        // printf("csz:%d >%c<  >%c<\n", csz, buffer[sizeof(buffer) - 1 ], cBuffer[csz - 1]);
         fwrite(cBuffer, csz, 1, fout);
         memset(buffer, 0, sizeof(buffer));
         memset(cBuffer, 0, sizeof(cBuffer));
     }
 }
 
+void finalizeWritebitsFile(BitField *bf, FILE *fout)
+{
+    // write, flush and close BitField buffer in file
+    // size in computed with currentIndex + 1 (last bit index in bytes array).
+    fwrite(bf->buffer, 1, bf->currentIndex + 1, fout);
+    fclose(fout);
+}
+
+// current and soon old method
+// void uncompressFile(FILE *fin, FILE *fout)
+// {
+//     // UCHAR c[3];
+//     Tuple t;
+//     EmittedTuple q;
+//     UCHAR d[1];
+//     INT read = 0;
+//     // INT usz = 0;
+//     long cfp = 0;
+//     UINT fCount = 0;
+//     UINT fChunkSize = 0;
+//
+//     while ((read = fread(&fChunkSize, sizeof(fChunkSize), 1, fin)) > 0) {
+//         printf("chunk:%d %lu\n", fChunkSize, ftell(fin));
+//         fCount = 0;
+//         // while ((read = fread(&c, 1, sizeof(c), fin)) > 0) {
+//         // while ((read = fread(&t, sizeof(tuple), 1, fin)) > 0) {
+//         while ((read = fread(&q, sizeof(EmittedTuple), 1, fin)) > 0) {
+//             fromEmittedTuple(&q, &t);
+//             // printf("%lu read:%d\n", ftell(fin), read);
+//             // tuple t = {c[0], c[1], c[2]};
+//             // printf("%d,%d,%d   ", t.d, t.l, t.c);
+//
+//             if (t.d != 0) {
+//                 // memcpy(output + outputIdx, output + outputIdx - t.d, t.l);
+//                 // outputIdx += t.l;
+//                 cfp = ftell(fout);
+//                 for (int i = 0; i < t.l; i++) {
+//                     fseek(fout, cfp - t.d + i, SEEK_SET);
+//                     fread(d, 1, sizeof(d), fout);
+//                     fseek(fout, 0, SEEK_END);
+//                     fwrite(d, 1, 1, fout);
+//                     fflush(fout);
+//                     fCount++;
+//                 }
+//             }
+//             // printf("%d %lu - %c \n", fCount, cfp, (UCHAR) t.c);
+//             if (fCount < fChunkSize) {
+//                 // when next car was taken out of message boundaries, no write
+//                 fwrite(&t.c, 1, 1, fout);
+//                 fflush(fout);
+//                 fCount++;
+//             }
+//
+//             if (fCount >= fChunkSize)
+//                 break;
+//         }
+//     }
+// }
+
+
+// Under development
 void uncompressFile(FILE *fin, FILE *fout)
 {
-    // UCHAR c[3];
     Tuple t;
     EmittedTuple q;
     UCHAR d[1];
     INT read = 0;
-    // INT usz = 0;
     long cfp = 0;
     UINT fCount = 0;
     UINT fChunkSize = 0;
+    UINT o = 1;
+    UINT valueRead = 0;
+    BitField bf;
 
     while ((read = fread(&fChunkSize, sizeof(fChunkSize), 1, fin)) > 0) {
-        // printf("chunk:%d %lu\n", fChunkSize, ftell(fin));
         fCount = 0;
-        // while ((read = fread(&c, 1, sizeof(c), fin)) > 0) {
-        // while ((read = fread(&t, sizeof(tuple), 1, fin)) > 0) {
-        while ((read = fread(&q, sizeof(EmittedTuple), 1, fin)) > 0) {
-            fromEmittedTuple(&q, &t);
-            // printf("%lu read:%d\n", ftell(fin), read);
-            // tuple t = {c[0], c[1], c[2]};
-            // printf("%d,%d,%d   ", t.d, t.l, t.c);
+        initBitFieldFile(&bf, fin);
+        // printf("read:%d\n", fChunkSize);
+        while (o) {
+            o = readbitsFile(&bf, DIC_BIT_SIZE, &valueRead);
+            t.d = (UCHAR) valueRead;    // WARNING 255 max
+            o = readbitsFile(&bf, AHEAD_BIT_SIZE, &valueRead);
+            t.l = (UCHAR) valueRead;    // WARNING
+            o = readbitsFile(&bf, CHAR_BIT_SIZE, &valueRead);
+            t.c = (UCHAR) valueRead;    // WARNING
 
             if (t.d != 0) {
-                // memcpy(output + outputIdx, output + outputIdx - t.d, t.l);
-                // outputIdx += t.l;
                 cfp = ftell(fout);
                 for (int i = 0; i < t.l; i++) {
                     fseek(fout, cfp - t.d + i, SEEK_SET);
@@ -330,7 +396,6 @@ void uncompressFile(FILE *fin, FILE *fout)
                     fCount++;
                 }
             }
-            // printf("%d %lu - %c \n", fCount, cfp, (UCHAR) t.c);
             if (fCount < fChunkSize) {
                 // when next car was taken out of message boundaries, no write
                 fwrite(&t.c, 1, 1, fout);
@@ -338,8 +403,10 @@ void uncompressFile(FILE *fin, FILE *fout)
                 fCount++;
             }
 
-            if (fCount >= fChunkSize)
+            if (fCount >= fChunkSize) {
+                fseek(fin, -1, SEEK_CUR);   // readbitsfile compensation TODO
                 break;
+            }
         }
     }
 }
