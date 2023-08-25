@@ -15,20 +15,20 @@
 #endif
 
 #define F_BUFFER_SZ 512
-#define C_F_BUFFER_SZ 512*2
-#define U_F_BUFFER_SZ 512*2
+#define C_F_BUFFER_SZ 512*3
+#define U_F_BUFFER_SZ 512*3
 
 // MAX 5 bits : 31
-#define DIC_SIZE 31
-#define DIC_BIT_SIZE 5
-// #define DIC_SIZE 7
-// #define DIC_BIT_SIZE 3
+// #define DIC_SIZE 31
+// #define DIC_BIT_SIZE 5
+#define DIC_SIZE 255
+#define DIC_BIT_SIZE 8
 
 // MAX 3 bits : 7
-#define AHEAD_SIZE 7
-#define AHEAD_BIT_SIZE 3
-// #define AHEAD_SIZE 15
-// #define AHEAD_BIT_SIZE 4
+// #define AHEAD_SIZE 7
+// #define AHEAD_BIT_SIZE 3
+#define AHEAD_SIZE 15
+#define AHEAD_BIT_SIZE 4
 
 
 #define CHAR_BIT_SIZE 8
