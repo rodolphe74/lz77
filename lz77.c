@@ -526,7 +526,7 @@ void finalizeWritebitsFile(BitField *bf, FILE *fout)
 void uncompressFile(FILE *fin, FILE *fout)
 {
     UCHAR cBuffer[C_F_BUFFER_SZ];
-    UCHAR buffer[/*F_BUFFER_SZ*/4096];
+    UCHAR buffer[F_BUFFER_SZ];
     UINT chunkSize = 0;
     INT read = 0;
     UINT sz = 0;
@@ -539,7 +539,7 @@ void uncompressFile(FILE *fin, FILE *fout)
     while ((read = fread(&chunkSize, sizeof(UINT), 1, fin)) > 0) {
         fread(cBuffer, chunkSize, 1, fin);
 
-        sz = uncompress(cBuffer, chunkSize - 1, buffer, /*F_BUFFER_SZ*/4096);
+        sz = uncompress(cBuffer, chunkSize - 1, buffer, F_BUFFER_SZ);
         fwrite(buffer, sz, 1, fout);
 
         memset(buffer, 0, sizeof(buffer));
