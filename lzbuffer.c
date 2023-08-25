@@ -61,11 +61,11 @@ int main(int argc, char *argv[])
     UCHAR backToOriginal[OUTPUT_SIZE] = { 0 };
 
     INT osz = sizeof(in);
-    INT csz = compress(in, osz, out, OUTPUT_SIZE);
-    printf("csz=%d\n", csz);
+    INT cidx = compress(in, osz, out, OUTPUT_SIZE);
+    printf("csz=%d\n", cidx);
 
-    INT bsz = uncompress(out, csz, backToOriginal, OUTPUT_SIZE);
-    printf("bsz=%d\n", bsz);
+    INT bidx = uncompress(out, cidx, backToOriginal, OUTPUT_SIZE);
+    printf("bsz=%d\n", bidx);
     printf("osz=%d\n", osz);
 
     // if (osz != bsz) {
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     //     return 1;
     // }
 
-    for (int i = 0; i < bsz; i++) {
+    for (int i = 0; i < bidx; i++) {
         // printf("%d<>%d\n", in[i], backToOriginal[i]);
         if (in[i] != backToOriginal[i]) {
             printf("Messages differ at %d\n", i);
@@ -99,16 +99,16 @@ int main(int argc, char *argv[])
                 u = rand() % 254 + 1;
             buf[j] = u;
         }
-        csz = compress(buf, sz, cbuf, sz * 2);
-        printf("sz:%lu csz:%d\n", sz, csz);
-        bsz = uncompress(cbuf, csz, back, sz * 2);
+        cidx = compress(buf, sz, cbuf, sz * 2);
+        printf("sz:%lu cidx:%d\n", sz, cidx);
+        bidx = uncompress(cbuf, cidx, back, sz * 2);
         // INT _csz = compress(_in, _osz, _out, OUTPUT_SIZE);
-        printf("bsz:%d\n", bsz);
-        if (sz != bsz) {
+        printf("bidx:%d\n", bidx);
+        if (sz != bidx) {
             printf("Messages sizes differ!\n");
             return 1;
         }
-        for (int k = 0; k < bsz; k++) {
+        for (int k = 0; k < bidx; k++) {
             if (buf[k] != back[k]) {
                 printf("%d<>%d\n", buf[i], back[k]);
                 printf("Messages differ at %d (%lu)\n", k, sz);
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
                 return 1;
             }
         }
-        printf("test %d (%f) all good!\n", i, (float) sz / (float) csz);
+        printf("test %d (%f) all good!\n", i, (float) sz / (float) cidx);
         free(buf);
         free(cbuf);
         free(back);
