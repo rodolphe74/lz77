@@ -133,35 +133,6 @@ Tuple findInDic(UCHAR *input, UINT inputSize,  UINT startDicIndex, UINT stopDicI
     return t;
 }
 
-// INT compress(UCHAR *input, UINT iSize, UCHAR *output, UINT oSize)
-// {
-//     // printf("iSize:%d   oSize:%d\n", iSize, oSize);
-//     memset(output, 0, oSize);   // uber wichtig !
-//     BitField bf;
-//     initBitField(&bf, output);
-//
-//     INT index = 0;
-//     INT dicIndexStart = 0, dicIndexStop = 0;
-//     while (index < iSize) {
-//
-//         dicIndexStart = (index /*- 1*/ -  DIC_SIZE) < 0 ? 0 : (index /*- 1*/ -  DIC_SIZE);
-//         dicIndexStop = index - 1;
-//
-//         // printf("index:%d(%c)\n", index, input[index]);
-//         Tuple t = {0, 0, 0};
-//         t = findInDic(input, iSize, dicIndexStart, dicIndexStop, index, AHEAD_SIZE);
-//
-//         // printf("c %d  t=%d,%d,%c(%d)\n", iSize, t.d, t.l, (char) t.c, t.c);
-//
-//         writebits(&bf, t.d, DIC_BIT_SIZE);
-//         writebits(&bf, t.l, AHEAD_BIT_SIZE);
-//         writebits(&bf, t.c, CHAR_BIT_SIZE);
-//
-//         index += 1 + t.l;
-//     }
-//     return bf.currentIndex;
-// }
-
 INT compress(UCHAR *input, UINT iSize, UCHAR *output, UINT oSize)
 {
     // printf("iSize:%d   oSize:%d\n", iSize, oSize);
@@ -191,32 +162,6 @@ INT compress(UCHAR *input, UINT iSize, UCHAR *output, UINT oSize)
     return bf.currentIndex;
 }
 
-
-// Under development
-// INT uncompress(UCHAR *input, UINT iSize, UCHAR *output, UINT oSize)
-// {
-//     BitField bf;
-//     initBitField(&bf, input);
-//     INT /*inputIdx = 0,*/ outputIdx = 0;
-//     memset(output, 0, oSize);
-//
-//     while (bf.currentIndex < iSize) {
-//
-//         Tuple t;
-//         t.d = /*(UCHAR)*/ readbits(&bf, DIC_BIT_SIZE);
-//         t.l = /*(UCHAR)*/ readbits(&bf, AHEAD_BIT_SIZE);
-//         t.c = (UCHAR) readbits(&bf, CHAR_BIT_SIZE);
-//         // printf("d  t=%d,%d,%c(%d)\n", t.d, t.l, (char) t.c, t.c);
-//
-//         if (t.d != 0) {
-//             memcpy(output + outputIdx, output + outputIdx - t.d, t.l);
-//             outputIdx += t.l;
-//         }
-//
-//         output[outputIdx++] = t.c;
-//     }
-//     return outputIdx;
-// }
 
 INT uncompress(UCHAR *input, UINT iSize, UCHAR *output, UINT oSize)
 {
