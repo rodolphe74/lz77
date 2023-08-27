@@ -24,6 +24,10 @@ program_start	EQU	*
 	SECTION	code
 
 
+_dicSize	IMPORT
+_dicBitSize	IMPORT
+_aheadSize	IMPORT
+_aheadBitSize	IMPORT
 _fouAPi00	EXPORT
 __160	EXPORT
 
@@ -126,8 +130,9 @@ _divmod8	IMPORT
 _dwtoa	IMPORT
 _enableCMOCFloatSupport	IMPORT
 _exit	IMPORT
-_fromEmittedTuple	IMPORT
 _initBitField	IMPORT
+_initDefaultParameters	IMPORT
+_initParameters	IMPORT
 _isalnum	IMPORT
 _isalpha	IMPORT
 _isdigit	IMPORT
@@ -242,7 +247,6 @@ _strtol	IMPORT
 _strtoul	IMPORT
 _strupr	IMPORT
 _subdww	IMPORT
-_toEmittedTuple	IMPORT
 _tolower	IMPORT
 _toupper	IMPORT
 _ultoa10	IMPORT
