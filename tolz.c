@@ -1,7 +1,7 @@
 #include "lz77.h"
-// #include "beast00077.h"
+#include "beast00077.h"
 // #include "nimoy0177.h"
-#include "fouAPi0077.h"
+// #include "fouAPi0077.h"
 
 // #define INPUT_SIZE 1024
 // #define OUTPUT_SIZE 1024
@@ -48,7 +48,7 @@ asm {
 int main(/*int argc, char *argv[]*/)
 {
     _160();
-    _PALETTE(fouAPi00.pal);
+    _PALETTE(beast000.pal);
 
     int *screenStart = (int *)0x4000;
     UCHAR *screenStartChar = (UCHAR *)screenStart;
@@ -91,9 +91,10 @@ int main(/*int argc, char *argv[]*/)
 
 
     // Understood:
-    uncompress(fouAPi00.mapA, fouAPi00.lenA, (UCHAR *) screenStartChar, 8000);
+    initParameters(511, 9, 15, 4);
+    uncompress(beast000.mapA, beast000.lenA, (UCHAR *) screenStartChar, 8000);
     _SWITCH_B();
-    uncompress(fouAPi00.mapB, fouAPi00.lenB, (UCHAR *) screenStartChar, 8000);
+    uncompress(beast000.mapB, beast000.lenB, (UCHAR *) screenStartChar, 8000);
 
     return 0;
 }
