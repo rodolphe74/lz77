@@ -77,3 +77,36 @@ int main(/*int argc, char *argv[]*/)
     return 0;
 }
 ```
+
+CMOC compilation & SAPFS virtual floppy creation (in ToMakefile).
+```shell
+CC=cmoc
+RM=rm -rf
+SAPFS=sapfs
+
+CFLAGS= -O2 --thomto -DCOMPILER_IS_CMOC
+
+LDFLAGS= -lcmoc-crt-thm
+
+all: tolz tolzbuf floppy
+
+lz77.o: lz77.c
+	$(CC) $(CFLAGS) -c $<
+	$(CC) -S $(CFLAGS) $<
+
+tolz: lz77.o tolz.c
+	$(CC) $(CFLAGS) -o$@.bin  $^ $(LDFLAGS)
+	$(CC) -S $(CFLAGS)  $^
+
+tolzbuf: lz77.o tolzbuf.c
+	$(CC) $(CFLAGS) -o$@.bin  $^ $(LDFLAGS)
+	$(CC) -S $(CFLAGS)  $^
+
+floppy:
+	$(SAPFS) -c floppy.sap
+	$(SAPFS) -a floppy.sap *.bin
+	$(SAPFS) -t floppy.sap
+
+clean:
+	$(RM) *.o *.a *.bin
+```
