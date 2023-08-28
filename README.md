@@ -78,7 +78,7 @@ int main(/*int argc, char *argv[]*/)
 }
 ```
 
-CMOC compilation & SAPFS virtual floppy creation (in ToMakefile).
+[CMOC](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html) compilation & SAPFS virtual floppy creation (in ToMakefile).
 ```shell
 CC=cmoc
 RM=rm -rf
