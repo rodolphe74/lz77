@@ -30,7 +30,6 @@ asm
 }
 }
 
-
 void _PALETTE(unsigned int *palette16)
 {
 asm {
