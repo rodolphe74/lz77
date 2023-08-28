@@ -12,7 +12,8 @@ Image Contained C header can be created with [DitherToMo](https://github.com/rod
 ./mapc1677 ../images/nimoy.jpg
 ```
 
-C loader looks like
+
+C loader looks like:
 
 ```c
 #include "lz77.h"
@@ -78,7 +79,8 @@ int main(/*int argc, char *argv[]*/)
 }
 ```
 
-[CMOC](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html) compilation & [SAPFS](https://github.com/nils-eilers/sap2) virtual floppy creation (in ToMakefile).
+
+[CMOC](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html) compilation & [SAPFS](https://github.com/nils-eilers/sap2) virtual floppy creation (in ToMakefile):
 ```shell
 CC=cmoc
 RM=rm -rf
