@@ -1,7 +1,9 @@
 #include "lz77.h"
 #include "beast00077.h"
-// #include "nimoy0177.h"
+// #include "nimoy0077.h"
 // #include "fouAPi0077.h"
+// #include "arton50077.h"
+// #include "thomso0077.h"
 
 // #define INPUT_SIZE 1024
 // #define OUTPUT_SIZE 1024

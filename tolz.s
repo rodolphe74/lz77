@@ -34,10 +34,10 @@ __160	EXPORT
 
 *******************************************************************************
 
-* FUNCTION _160(): defined at tolz.c:10
+* FUNCTION _160(): defined at tolz.c:12
 __160	EQU	*
 * Calling convention: Default
-* Line tolz.c:13: inline assembly
+* Line tolz.c:15: inline assembly
 * Inline assembly:
 
 
@@ -48,7 +48,7 @@ __160	EQU	*
 * End of inline assembly.
 * Useless label L00079 removed
 	RTS
-* END FUNCTION _160(): defined at tolz.c:10
+* END FUNCTION _160(): defined at tolz.c:12
 funcend__160	EQU *
 funcsize__160	EQU	funcend__160-__160
 __PALETTE	EXPORT
@@ -56,14 +56,14 @@ __PALETTE	EXPORT
 
 *******************************************************************************
 
-* FUNCTION _PALETTE(): defined at tolz.c:20
+* FUNCTION _PALETTE(): defined at tolz.c:22
 __PALETTE	EQU	*
 * Calling convention: Default
 	PSHS	U
 	LEAU	,S
 * Formal parameter(s):
 *      4,U:    2 bytes: palette16: unsigned int *
-* Line tolz.c:22: inline assembly
+* Line tolz.c:24: inline assembly
 * Inline assembly:
 
 
@@ -86,7 +86,7 @@ PALETTE_FOND
 * Useless label L00080 removed
 	LEAS	,U
 	PULS	U,PC
-* END FUNCTION _PALETTE(): defined at tolz.c:20
+* END FUNCTION _PALETTE(): defined at tolz.c:22
 funcend__PALETTE	EQU *
 funcsize__PALETTE	EQU	funcend__PALETTE-__PALETTE
 __SWITCH_B	EXPORT
@@ -94,10 +94,10 @@ __SWITCH_B	EXPORT
 
 *******************************************************************************
 
-* FUNCTION _SWITCH_B(): defined at tolz.c:39
+* FUNCTION _SWITCH_B(): defined at tolz.c:41
 __SWITCH_B	EQU	*
 * Calling convention: Default
-* Line tolz.c:41: inline assembly
+* Line tolz.c:43: inline assembly
 * Inline assembly:
 
 
@@ -109,7 +109,7 @@ __SWITCH_B	EQU	*
 * End of inline assembly.
 * Useless label L00081 removed
 	RTS
-* END FUNCTION _SWITCH_B(): defined at tolz.c:39
+* END FUNCTION _SWITCH_B(): defined at tolz.c:41
 funcend__SWITCH_B	EQU *
 funcsize__SWITCH_B	EQU	funcend__SWITCH_B-__SWITCH_B
 ___va_arg	IMPORT
@@ -145,7 +145,7 @@ _main	EXPORT
 
 *******************************************************************************
 
-* FUNCTION main(): defined at tolz.c:48
+* FUNCTION main(): defined at tolz.c:50
 _main	EQU	*
 * Calling convention: Default
 	PSHS	U
@@ -154,23 +154,23 @@ _main	EQU	*
 * Local non-static variable(s):
 *     -4,U:    2 bytes: screenStart: int *
 *     -2,U:    2 bytes: screenStartChar: unsigned char *
-* Line tolz.c:50: function call: _160()
+* Line tolz.c:52: function call: _160()
 	LBSR	__160
-* Line tolz.c:51: function call: _PALETTE()
+* Line tolz.c:53: function call: _PALETTE()
 	LEAX	_beast000+0,PCR	member pal of beast000_struct, via variable beast000
 	PSHS	X		optim: optimizeTfrPush
 * optim: optimizeTfrPush
 	LBSR	__PALETTE
 	LEAS	2,S
-* Line tolz.c:53: init of variable screenStart
+* Line tolz.c:55: init of variable screenStart
 	LDD	#$4000		decimal 16384 signed
 * Emitted no code to cast `int' to `int *'
 	STD	-4,U		variable screenStart
-* Line tolz.c:54: init of variable screenStartChar
+* Line tolz.c:56: init of variable screenStartChar
 * optim: storeLoad
 * Emitted no code to cast `int *' to `unsigned char *'
 	STD	-2,U		variable screenStartChar
-* Line tolz.c:94: function call: initParameters()
+* Line tolz.c:96: function call: initParameters()
 	CLRA
 	LDB	#$04		decimal 4 signed
 	PSHS	B,A		argument 4 of initParameters(): int
@@ -183,7 +183,7 @@ _main	EQU	*
 	PSHS	B,A		argument 1 of initParameters(): int
 	LBSR	_initParameters
 	LEAS	8,S
-* Line tolz.c:95: function call: uncompress()
+* Line tolz.c:97: function call: uncompress()
 	LDY	#$1F40		optim: transformPshsXPshsX
 * optim: optimizePshsOps
 	LDX	-2,U		optim: transformPshsDPshsD
@@ -195,9 +195,9 @@ _main	EQU	*
 	PSHS	B,A		argument 1 of uncompress(): unsigned char[]
 	LBSR	_uncompress
 	LEAS	8,S
-* Line tolz.c:96: function call: _SWITCH_B()
+* Line tolz.c:98: function call: _SWITCH_B()
 	LBSR	__SWITCH_B
-* Line tolz.c:97: function call: uncompress()
+* Line tolz.c:99: function call: uncompress()
 	LDY	#$1F40		optim: transformPshsXPshsX
 * optim: optimizePshsOps
 	LDX	-2,U		optim: transformPshsDPshsD
@@ -209,14 +209,14 @@ _main	EQU	*
 * optim: optimizeTfrPush
 	LBSR	_uncompress
 	LEAS	8,S
-* Line tolz.c:99: return with value
+* Line tolz.c:101: return with value
 	CLRA
 	CLRB
 * optim: branchToNextLocation
 * Useless label L00082 removed
 	LEAS	,U
 	PULS	U,PC
-* END FUNCTION main(): defined at tolz.c:48
+* END FUNCTION main(): defined at tolz.c:50
 funcend_main	EQU *
 funcsize_main	EQU	funcend_main-_main
 _memchr	IMPORT
