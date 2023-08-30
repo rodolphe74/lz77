@@ -210,6 +210,7 @@ UINT readbitsFile(BitField *bf, UCHAR bitCount, UINT *valueRead)
     if (bf->file.init) {
         // o = fread(&currentChar, 1, 1, bf->file.f);
         o = fread(&bf->file.currentChar, 1, 1, bf->file.f);
+        bf->currentIndex++;
         bf->file.init = 0;
     }
     while (bitCount) {
@@ -223,6 +224,7 @@ UINT readbitsFile(BitField *bf, UCHAR bitCount, UINT *valueRead)
         if (bf->bitLeft < 0) {
             bf->bitLeft = 7;
             o = fread(&bf->file.currentChar, 1, 1, bf->file.f);
+            bf->currentIndex++;
             if (!o) {
                 return 0;
             }
@@ -284,64 +286,61 @@ void finalizeWritebitsFile(BitField *bf, FILE *fout)
 
 
 // **************************************
-// Keep for later use.
 // Uncompress without buffer.
 // Use file structure from bitFieldStruct
 // and seek directly on byte with fseek.
 // Need a good system buffered disk read.
-// Need to write uncompressed chunk size
+// Need to write compressed chunk size
 // to synchronize (F_BUFFER_SZ).
 // **************************************
-// void uncompressFile(FILE *fin, FILE *fout)
-// {
-//     Tuple t;
-//     EmittedTuple q;
-//     UCHAR d[1];
-//     INT read = 0;
-//     long cfp = 0;
-//     UINT fCount = 0;
-//     UINT fChunkSize = 0;
-//     UINT o = 1;
-//     UINT valueRead = 0;
-//     BitField bf;
-//
-//     while ((read = fread(&fChunkSize, sizeof(fChunkSize), 1, fin)) > 0) {
-//         fCount = 0;
-//         initBitFieldFile(&bf, fin);
-//         printf("read:%d\n", fChunkSize);
-//         while (o) {
-//             o = readbitsFile(&bf, DIC_BIT_SIZE, &valueRead);
-//             t.d = (UCHAR) valueRead;    // WARNING 255 max
-//             o = readbitsFile(&bf, AHEAD_BIT_SIZE, &valueRead);
-//             t.l = (UCHAR) valueRead;    // WARNING
-//             o = readbitsFile(&bf, CHAR_BIT_SIZE, &valueRead);
-//             t.c = (UCHAR) valueRead;    // WARNING
-//
-//             if (t.d != 0) {
-//                 cfp = ftell(fout);
-//                 for (int i = 0; i < t.l; i++) {
-//                     fseek(fout, cfp - t.d + i, SEEK_SET);
-//                     fread(d, 1, sizeof(d), fout);
-//                     fseek(fout, 0, SEEK_END);
-//                     fwrite(d, 1, 1, fout);
-//                     fflush(fout);
-//                     fCount++;
-//                 }
-//             }
-//             if (fCount < fChunkSize) {
-//                 // when next car was taken out of message boundaries, no write
-//                 fwrite(&t.c, 1, 1, fout);
-//                 fflush(fout);
-//                 fCount++;
-//             }
-//
-//             if (fCount >= fChunkSize) {
-//                 fseek(fin, -1, SEEK_CUR);   // readbitsfile compensation TODO ca depend
-//                 break;
-//             }
-//         }
-//     }
-// }
+void uncompressFileUnbuffered(FILE *fin, FILE *fout)
+{
+    Tuple t;
+    UCHAR d[1];
+    INT read = 0;
+    long cfp = 0;
+    UINT fChunkSize = 0;
+    UINT o = 1;
+    UINT valueRead = 0;
+    BitField bf;
+
+    while ((read = fread(&fChunkSize, sizeof(fChunkSize), 1, fin)) > 0) {
+        // fCount = 0;
+        // bitsWriten++;
+        initBitFieldFile(&bf, fin);
+        // printf("read:%d\n", fChunkSize);
+        bf.currentIndex = 0;
+        while (o) {
+            o = readbitsFile(&bf, dicBitSize, &valueRead);
+            t.d = valueRead;    // WARNING 255 max
+            o = readbitsFile(&bf, aheadBitSize, &valueRead);
+            t.l = valueRead;    // WARNING
+            o = readbitsFile(&bf, CHAR_BIT_SIZE, &valueRead);
+            t.c = (UCHAR) valueRead;    // WARNING
+
+            if (t.d != 0) {
+                cfp = ftell(fout);
+                for (int i = 0; i < t.l; i++) {
+                    fseek(fout, cfp - t.d + i, SEEK_SET);
+                    read = fread(d, 1, sizeof(d), fout);
+                    fseek(fout, 0, SEEK_END);
+                    fwrite(d, 1, 1, fout);
+                    fflush(fout);
+                }
+            }
+            fwrite(&t.c, 1, 1, fout);
+            // bitsWriten++;
+            fflush(fout);
+            // fCount++;
+            // printf("currentIndex   %d\n", bf.currentIndex);
+
+            if (bf.currentIndex >= fChunkSize) {
+                // fseek(fin, -1, SEEK_CUR);   // readbitsfile compensation TODO ca depend
+                break;
+            }
+        }
+    }
+}
 
 
 // ****************************************

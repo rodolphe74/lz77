@@ -97,4 +97,5 @@ UINT readbitsFile(BitField *bf, UCHAR bitCount, UINT *valueRead);
 void finalizeWritebitsFile(BitField *bf, FILE *fout);
 void compressFile(FILE *fin, FILE *fout);
 void uncompressFile(FILE *fin, FILE *fout);
+void uncompressFileUnbuffered(FILE *fin, FILE *fout);
 #endif
