@@ -13,11 +13,12 @@
 
 int main(int argc, char *argv[])
 {
-    // initDefaultParameters();
-    initParameters(511, 9, 15, 4);
+    initDefaultParameters();
+    // initParameters(511, 9, 15, 4);
 
     // sample buffer compression test
-    UCHAR in[] = {'!', '!', '!', '!', '!', '!', '!', '!', '!', 'H', 'e', 'l', 'l', 'o', ' ', 'f', 'r', 'i', 'e', 'n', 'd', 's', ',', ' ', 'H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '!', '!', '!', '!', '!', '!', '!', '!', '!'};
+    UCHAR in[] = {'H', 'e', 'l', 'l', 'o', ' ', 'f', 'r', 'i', 'e', 'n', 'd', 's', ',', ' ', 'H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'};
+    // UCHAR in[] = {'!', '!', '!', '!', '!', '!', '!', '!', '!', 'H', 'e', 'l', 'l', 'o', ' ', 'f', 'r', 'i', 'e', 'n', 'd', 's', ',', ' ', 'H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '!', '!', '!', '!', '!', '!', '!', '!', '!'};
     UCHAR out[OUTPUT_SIZE] = { 0 };
     UCHAR backToOriginal[OUTPUT_SIZE] = { 0 };
 
@@ -51,12 +52,12 @@ int main(int argc, char *argv[])
         UCHAR *buf = malloc(sz);
         UCHAR *cbuf = malloc(sz * 3);
         UCHAR *back = malloc(sz * 3);
-        UCHAR u;
+        UCHAR u = 0;
         memset(buf, 0, sz);
         memset(cbuf, 0, sz * 3);
         memset(back, 0, sz * 3);
         for (int j = 0; j < sz; j++) {
-            if (j%8==0)
+            if (j%20==0)
                 u = rand() % 254 + 1;
             buf[j] = u;
         }

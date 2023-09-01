@@ -4,7 +4,7 @@
 #include <time.h>
 #include <string.h>
 
-#define F "maupassant"
+#define F "/home/rodoc/develop/projects/lz77/maupassant512"
 #define E ".txt"
 #define FILENAME F E
 
@@ -56,9 +56,23 @@ float getCompressionRatio(FILE *fp1, FILE *fp2)
 
 int main(int argc, char *argv[])
 {
+    // UCHAR b[] = "GCATCGCAGAGAGTATACAGTACG";
+    // UCHAR a[] = "GCAGAGAG";
+    // int j = bruteForceSearch(a, 8, b, 24);
+    // printf("j=%d\n", j);
+    //
+    // j = bruteForceSearchOptim(a, 8, b, 24);
+    // printf("j=%d\n", j);
+    //
+    // j = karpRabinSearch(a, 8, b, 24);
+    // printf("j=%d\n", j);
+    //
+    // exit(1);
+
     clock_t start, end;
     double timeUsed;
-
+    FILE *f, *g;
+    int compare = 0;
 
     initDefaultParameters();
     // initParameters(511, 9, 15, 4);
@@ -81,7 +95,7 @@ int main(int argc, char *argv[])
     fclose(fout);
     printf("Compression time %f\n", timeUsed);
 
-    // uncompress file test
+    // // uncompress file test
     fin = fopen(FILENAME_COMP, "rb");
     fout = fopen(FILENAME_DECOMP, "w+b");
 
@@ -97,9 +111,9 @@ int main(int argc, char *argv[])
     fclose(fout);
     printf("\nDecompression time %f\n", timeUsed);
 
-    FILE *f = fopen(FILENAME, "rb");
-    FILE *g = fopen(FILENAME_DECOMP, "rb");
-    int compare = compareFiles(f, g);
+    f = fopen(FILENAME, "rb");
+    g = fopen(FILENAME_DECOMP, "rb");
+    compare = compareFiles(f, g);
     if (compare == 0)
         printf("Buffered test is valid\n");
 
