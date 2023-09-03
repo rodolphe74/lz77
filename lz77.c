@@ -11,7 +11,7 @@ UCHAR dicBitSize;
 UINT dicSize;
 UCHAR aheadBitSize;
 UINT aheadSize;
-
+INT lps[KMP_LPS_SIZE];  // WARNING multithread search
 
 
 void initDefaultParameters()
@@ -20,6 +20,7 @@ void initDefaultParameters()
     dicBitSize = DIC_BIT_SIZE;
     aheadSize = AHEAD_SIZE;
     aheadBitSize = AHEAD_BIT_SIZE;
+    memset(lps, 0, KMP_LPS_SIZE * sizeof(INT));
 }
 
 void initParameters(UINT dsz, UCHAR bdsz, UINT asz, UCHAR basz)
@@ -28,6 +29,7 @@ void initParameters(UINT dsz, UCHAR bdsz, UINT asz, UCHAR basz)
     dicBitSize = bdsz;
     aheadSize = asz;
     aheadBitSize = basz;
+    memset(lps, 0, KMP_LPS_SIZE * sizeof(INT));
 }
 
 void initBitField(BitField *bf, UCHAR *buf)
@@ -160,6 +162,81 @@ INT karpRabinSearch(UCHAR *x, INT m, UCHAR *y, INT n)
 }
 
 
+
+// Fills lps[] for given pattern pat[0..M-1]
+// lps[i] = the longest proper prefix of pat[0..i] which is also a suffix of pat[0..i].
+// sample : “AABAACAABAA”, lps[] is [0, 1, 0, 1, 2, 0, 1, 2, 3, 4, 5]
+// idx = 4 : [AA]B[AA] -> 2 (sz(pre(AA)) = sz(suf(AA)) = 2)
+// idx = 8 : [AAB]AAC[AAB] -> 3 (sz(pre(AAB)) = sz(suf(AAB)) = 3)
+// idx = 9 : [AABA]AC[AABA] -> 3 (sz(pre(AABA)) = sz(suf(AABA)) = 4)
+void computeLPSArray(UCHAR *pattern, UINT M, INT *lps)
+{
+    // length of the previous longest prefix suffix
+    INT len = 0;
+    lps[0] = 0; // lps[0] is always 0
+
+    // the loop calculates lps[i] for i = 1 to M-1
+    INT i = 1;
+    while (i < M) {
+        if (pattern[i] == pattern[len]) {
+            len++;
+            lps[i] = len;
+            i++;
+        } else { // (pat[i] != pat[len])
+            // This is tricky. Consider the example.
+            // AAACAAAA and i = 7. The idea is similar
+            // to search step.
+            if (len != 0) {
+                len = lps[len - 1];
+
+                // Also, note that we do not increment
+                // i here
+            } else { // if (len == 0)
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+}
+
+
+INT knuthMorrisPrattSearch(UCHAR *x, INT m, UCHAR *y, INT n)
+{
+    // Preprocess the pattern (calculate lps[] array)
+    computeLPSArray(x, m, lps);
+
+    UINT i = 0; // index for txt[]
+    UINT j = 0; // index for pat[]
+    while ((n - i) >= (m - j)) {
+        if (x[j] == y[i]) {
+            j++;
+            i++;
+        }
+
+        if (j == m) {
+            // printf("Found pattern at index %d ", i - j);
+            return (i - j);
+            // j = lps[j - 1];
+        }
+
+        // mismatch after j matches
+        else if (i < n && x[j] != y[i]) {
+            // Do not match lps[0..lps[j-1]] characters,
+            // they will match anyway
+            if (j != 0) {
+                // printf("shift by %d%c%c", j, 10, 13);
+                j = lps[j - 1];
+            } else {
+                // printf("shift++\n");
+                i = i + 1;
+            }
+        }
+    }
+    return -1;
+}
+
+
+
 Tuple findInDic(UCHAR *input, UINT inputSize,  UINT startDicIndex, UINT stopDicIndex, UINT startAHead, UINT aHeadSize)
 {
     // printf("%d %d %d %d %c%c", startAHead, startDicIndex, startDicIndex, stopDicIndex, 10, 13);
@@ -173,7 +250,7 @@ Tuple findInDic(UCHAR *input, UINT inputSize,  UINT startDicIndex, UINT stopDicI
     int match = -1;
 
     // UINT maxAHeadIndex = startAHead + aheadSize > inputSize ? (UINT) 0 : (UINT) aHeadSize - 1;
-    UINT maxAHeadIndex = startAHead + aheadSize > inputSize ? (UINT) (inputSize - startAHead - 1) : (UINT) (aHeadSize - 1);
+    UINT maxAHeadIndex = startAHead + aheadSize > inputSize ? (UINT)(inputSize - startAHead - 1) : (UINT)(aHeadSize - 1);
     // printf("inputSize:%d   startAHead%d   maxAHeadIndex:%d%c%c", inputSize, startAHead, maxAHeadIndex, 10, 13);
     for (UINT i = maxAHeadIndex; i >= 1; i--) {
         match = MATCH_STRING_FUNC(input + startAHead, i, input + startDicIndex, stopDicIndex - startDicIndex);
@@ -188,53 +265,6 @@ Tuple findInDic(UCHAR *input, UINT inputSize,  UINT startDicIndex, UINT stopDicI
     return t;
 }
 
-
-// Tuple findInDic(UCHAR *input, UINT inputSize,  UINT startDicIndex, UINT stopDicIndex, UINT startAHead, UINT aHeadSize)
-// {
-//     if (startAHead == startDicIndex) {
-//         Tuple t = { 0, 0, input[startAHead] };
-//         return t;
-//     }
-//
-//     Tuple t = {0, 0, input[startAHead]};
-//     UCHAR match = 0;
-//     INT i = 0, j = 0, k = 0;
-//     INT maxK = 0;
-//     while (startDicIndex <= stopDicIndex) {
-//         // printf("*startDicIndex:%d   stopDicIndex:%d\n", startDicIndex, stopDicIndex);
-//
-//         for (i = startAHead; i < startAHead + aHeadSize; i++) {
-//             for (j = startDicIndex; j <= stopDicIndex /*- 1*/; j++) {    // TODO decrement
-//                 if (input[j] == input[startAHead]) {
-//                     // printf("  ** match %d(%c)=%d(%c)\n", j, (char) input[j], startAHead, (char) input[startAHead]);
-//                     match = 1;
-//                     break;
-//                 }
-//             }
-//             if (match) {
-//                 k = 1;
-//                 while (k < aHeadSize - 1 && input[j + k] == input[startAHead + k]) {
-//                     if (j + k >= stopDicIndex) break;
-//                     k++;
-//                 }
-//
-//                 if (k > maxK) {
-//
-//                     if (startAHead + k > inputSize - 1) break;    // check overflow
-//
-//                     t.d = (i - j);
-//                     t.l = k;
-//                     t.c = input[startAHead + k];
-//                     maxK = k;
-//                     // printf("maxK:%d %d %d\n", maxK, startAHead + k, startAHead);
-//                 }
-//                 break;
-//             }
-//         }
-//         startDicIndex++;
-//     }
-//     return t;
-// }
 
 INT compress(UCHAR *input, UINT iSize, UCHAR *output, UINT oSize)
 {
@@ -483,3 +513,5 @@ void uncompressFile(FILE *fin, FILE *fout)
 }
 
 #endif
+
+

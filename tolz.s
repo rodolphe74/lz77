@@ -24,6 +24,7 @@ program_start	EQU	*
 	SECTION	code
 
 
+_lps	IMPORT
 _dicSize	IMPORT
 _dicBitSize	IMPORT
 _aheadSize	IMPORT
@@ -46,7 +47,7 @@ __160	EQU	*
 
 
 * End of inline assembly.
-* Useless label L00083 removed
+* Useless label L00084 removed
 	RTS
 * END FUNCTION _160(): defined at tolz.c:11
 funcend__160	EQU *
@@ -83,7 +84,7 @@ PALETTE_FOND
 
 
 * End of inline assembly.
-* Useless label L00084 removed
+* Useless label L00085 removed
 	LEAS	,U
 	PULS	U,PC
 * END FUNCTION _PALETTE(): defined at tolz.c:21
@@ -107,7 +108,7 @@ __SWITCH_B	EQU	*
 
 
 * End of inline assembly.
-* Useless label L00085 removed
+* Useless label L00086 removed
 	RTS
 * END FUNCTION _SWITCH_B(): defined at tolz.c:40
 funcend__SWITCH_B	EQU *
@@ -142,6 +143,7 @@ _isdigit	IMPORT
 _isspace	IMPORT
 _itoa10	IMPORT
 _karpRabinSearch	IMPORT
+_knuthMorrisPrattSearch	IMPORT
 _labs	IMPORT
 _ltoa10	IMPORT
 _main	EXPORT
@@ -217,7 +219,7 @@ _main	EQU	*
 	CLRA
 	CLRB
 * optim: branchToNextLocation
-* Useless label L00086 removed
+* Useless label L00087 removed
 	LEAS	,U
 	PULS	U,PC
 * END FUNCTION main(): defined at tolz.c:49

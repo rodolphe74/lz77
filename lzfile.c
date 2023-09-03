@@ -4,7 +4,7 @@
 #include <time.h>
 #include <string.h>
 
-#define F "/home/rodoc/develop/projects/lz77/maupassant512"
+#define F "/home/rodoc/develop/projects/lz77/maupassant"
 #define E ".txt"
 #define FILENAME F E
 
@@ -56,26 +56,39 @@ float getCompressionRatio(FILE *fp1, FILE *fp2)
 
 int main(int argc, char *argv[])
 {
+    initDefaultParameters();
+    // initParameters(511, 9, 31, 5);
+
+
+
     // UCHAR b[] = "GCATCGCAGAGAGTATACAGTACG";
-    // UCHAR a[] = "GCAGAGAG";
-    // int j = bruteForceSearch(a, 8, b, 24);
+    // UCHAR a[] = "TACG";
+    // UINT szB = 24;
+    // UINT szA = 3;
+    //
+    // int j = bruteForceSearch(a, szA, b, szB);
     // printf("j=%d\n", j);
     //
-    // j = bruteForceSearchOptim(a, 8, b, 24);
+    // j = bruteForceSearchOptim(a, szA, b, szB);
     // printf("j=%d\n", j);
     //
-    // j = karpRabinSearch(a, 8, b, 24);
+    // j = karpRabinSearch(a, szA, b, szB);
+    // printf("j=%d\n", j);
+    //
+    // j = knuthMorrisPrattSearch(a, szA, b, szB);
     // printf("j=%d\n", j);
     //
     // exit(1);
+
+
 
     clock_t start, end;
     double timeUsed;
     FILE *f, *g;
     int compare = 0;
 
-    initDefaultParameters();
-    // initParameters(511, 9, 15, 4);
+
+
 
     // compress file test
     FILE *fin = fopen(FILENAME, "rb");
@@ -90,7 +103,7 @@ int main(int argc, char *argv[])
     start = clock();
     compressFile(fin, fout);
     end = clock();
-    timeUsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    timeUsed = ((double)(end - start)) / CLOCKS_PER_SEC;
     fclose(fin);
     fclose(fout);
     printf("Compression time %f\n", timeUsed);
@@ -106,7 +119,7 @@ int main(int argc, char *argv[])
     start = clock();
     uncompressFile(fin, fout);
     end = clock();
-    timeUsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    timeUsed = ((double)(end - start)) / CLOCKS_PER_SEC;
     fclose(fin);
     fclose(fout);
     printf("\nDecompression time %f\n", timeUsed);
@@ -131,7 +144,7 @@ int main(int argc, char *argv[])
     start = clock();
     uncompressFileUnbuffered(fin, fout);
     end = clock();
-    timeUsed = ((double) (end - start)) / CLOCKS_PER_SEC;
+    timeUsed = ((double)(end - start)) / CLOCKS_PER_SEC;
     fclose(fin);
     fclose(fout);
     printf("\nUnbuffered decompression time %f\n", timeUsed);
@@ -153,4 +166,5 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
 
