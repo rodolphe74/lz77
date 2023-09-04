@@ -1,11 +1,15 @@
 #include "lz77.h"
-// #include "beast00077.h"
-// #include "nimoy0077.h"
-// #include "fouAPi0077.h"
-#include "arton50077.h"
+// #include "images/beast00077.h"
+// #include "images/nimoy0077.h"
+// #include "images/fouAPi0077.h"
+// #include "images/arton50077.h"
+// #include "images/arton40077.h"
+#include "images/artonb0077.h"
 
 // #define INPUT_SIZE 1024
 // #define OUTPUT_SIZE 1024
+
+#define STRUCT_NAME artonb00
 
 // set 160*200*16
 void _160()
@@ -49,7 +53,7 @@ asm {
 int main(/*int argc, char *argv[]*/)
 {
     _160();
-    _PALETTE(arton500.pal);
+    _PALETTE(STRUCT_NAME.pal);
 
     int *screenStart = (int *)0x4000;
     UCHAR *screenStartChar = (UCHAR *)screenStart;
@@ -86,9 +90,9 @@ int main(/*int argc, char *argv[]*/)
 
     // Understood:
     initParameters(511, 9, 15, 4);
-    uncompress(arton500.mapA, arton500.lenA, (UCHAR *) screenStartChar, 8000);
+    uncompress(STRUCT_NAME.mapA, STRUCT_NAME.lenA, (UCHAR *) screenStartChar, 8000);
     _SWITCH_B();
-    uncompress(arton500.mapB, arton500.lenB, (UCHAR *) screenStartChar, 8000);
+    uncompress(STRUCT_NAME.mapB, STRUCT_NAME.lenB, (UCHAR *) screenStartChar, 8000);
 
     return 0;
 }

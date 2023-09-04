@@ -4,7 +4,7 @@
 #include <time.h>
 #include <string.h>
 
-#define F "/home/rodoc/develop/projects/lz77/maupassant"
+#define F "../samples/maupassant"
 #define E ".txt"
 #define FILENAME F E
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     // UCHAR b[] = "GCATCGCAGAGAGTATACAGTACG";
     // UCHAR a[] = "TACG";
     // UINT szB = 24;
-    // UINT szA = 3;
+    // UINT szA = 4;
     //
     // int j = bruteForceSearch(a, szA, b, szB);
     // printf("j=%d\n", j);
@@ -76,6 +76,9 @@ int main(int argc, char *argv[])
     // printf("j=%d\n", j);
     //
     // j = knuthMorrisPrattSearch(a, szA, b, szB);
+    // printf("j=%d\n", j);
+    //
+    // j = boyerMooreSearch(a, szA, b, szB);
     // printf("j=%d\n", j);
     //
     // exit(1);

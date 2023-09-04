@@ -24,7 +24,6 @@ program_start	EQU	*
 	SECTION	code
 
 
-_lps	IMPORT
 _dicSize	IMPORT
 _dicBitSize	IMPORT
 _aheadSize	IMPORT
@@ -36,6 +35,7 @@ _atoi	IMPORT
 _atol	IMPORT
 _atoui	IMPORT
 _atoul	IMPORT
+_boyerMooreSearch	IMPORT
 _bruteForceSearch	IMPORT
 _bruteForceSearchOptim	IMPORT
 _bsearch	IMPORT
@@ -92,16 +92,16 @@ _main	EQU	*
 *  -4097,U: 2048 bytes: out1k: unsigned char[]
 *  -2049,U: 2048 bytes: back1k: unsigned char[]
 *     -1,U:    1 byte : ch: unsigned char
-* Line tolzbuf.c:9: function call: initParameters()
+* Line tolzbuf.c:8: function call: initParameters()
 	CLRA
 	LDB	#$04		decimal 4 signed
 	PSHS	B,A		argument 4 of initParameters(): int
 * optim: stripExtraClrA_B
 	LDB	#$0F		decimal 15 signed
 	PSHS	B,A		argument 3 of initParameters(): int
-	LDB	#$07		optim: removeAndOrMulAddSub
+	LDB	#$09		optim: removeAndOrMulAddSub
 	PSHS	B,A		argument 2 of initParameters(): int
-	LDB	#$7F		optim: removeAndOrMulAddSub
+	LDD	#$01FF		decimal 511 signed
 	PSHS	B,A		argument 1 of initParameters(): int
 	LBSR	_initParameters
 	LEAS	8,S
@@ -129,7 +129,7 @@ _main	EQU	*
 * optim: optimizePshsOps
 	LDD	#$0100		decimal 256 signed
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00085,PCR	"randomizing %d values%c%c"
+	LEAX	S00086,PCR	"randomizing %d values%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
@@ -138,8 +138,8 @@ _main	EQU	*
 	CLRA
 	CLRB
 	STD	-10538,U	variable i
-	LBRA	L00102		jump to for condition
-L00101	EQU	*
+	LBRA	L00103		jump to for condition
+L00102	EQU	*
 * Line tolzbuf.c:21: for body
 * Line tolzbuf.c:22: assignment: =
 	CLRA
@@ -183,20 +183,20 @@ L00101	EQU	*
 	LEAX	D,X		add offset
 	PULS	A,B		retrieve value to store
 	STD	,X
-* Useless label L00103 removed
+* Useless label L00104 removed
 * Line tolzbuf.c:21: for increment(s)
 	LDD	-10538,U
 	ADDD	#1
 	STD	-10538,U
-L00102	EQU	*
+L00103	EQU	*
 * Line tolzbuf.c:21: for condition
 	LDD	-10538,U	variable i
 	CMPD	#$0100
-	LBLT	L00101
+	LBLT	L00102
 * optim: branchToNextLocation
-* Useless label L00104 removed
+* Useless label L00105 removed
 * Line tolzbuf.c:26: function call: printf()
-	LEAX	S00086,PCR	"\n"
+	LEAX	S00087,PCR	"\n"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	2,S
@@ -207,7 +207,7 @@ L00102	EQU	*
 * optim: optimizePshsOps
 	LDD	#$0100		decimal 256 signed
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00087,PCR	"writing %d values%c%c"
+	LEAX	S00088,PCR	"writing %d values%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
@@ -216,8 +216,8 @@ L00102	EQU	*
 	CLRA
 	CLRB
 	STD	-10538,U	variable i
-	BRA	L00106		jump to for condition
-L00105	EQU	*
+	BRA	L00107		jump to for condition
+L00106	EQU	*
 * Line tolzbuf.c:28: for body
 * Line tolzbuf.c:30: function call: writebits()
 	LDD	-10538,U	variable i
@@ -237,18 +237,18 @@ L00105	EQU	*
 	PSHS	X		argument 1 of writebits(): struct bitFieldStruct *
 	LBSR	_writebits
 	LEAS	6,S
-* Useless label L00107 removed
+* Useless label L00108 removed
 * Line tolzbuf.c:28: for increment(s)
 	LDD	-10538,U
 	ADDD	#1
 	STD	-10538,U
-L00106	EQU	*
+L00107	EQU	*
 * Line tolzbuf.c:28: for condition
 	LDD	-10538,U	variable i
 	CMPD	#$0100
-	BLT	L00105
+	BLT	L00106
 * optim: branchToNextLocation
-* Useless label L00108 removed
+* Useless label L00109 removed
 * Line tolzbuf.c:32: function call: initBitField()
 	LEAY	-9251,U		optim: transformPshsXPshsX
 * optim: optimizePshsOps
@@ -263,7 +263,7 @@ L00106	EQU	*
 * optim: optimizePshsOps
 	LDD	#$0100		decimal 256 signed
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00088,PCR	"reading %d values%c%c"
+	LEAX	S00089,PCR	"reading %d values%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
@@ -272,8 +272,8 @@ L00106	EQU	*
 	CLRA
 	CLRB
 	STD	-10538,U	variable i
-	BRA	L00110		jump to for condition
-L00109	EQU	*
+	BRA	L00111		jump to for condition
+L00110	EQU	*
 * Line tolzbuf.c:34: for body
 * Line tolzbuf.c:35: init of variable v
 * Line tolzbuf.c:35: function call: readbits()
@@ -298,18 +298,18 @@ L00109	EQU	*
 	LEAX	D,X		add offset
 	PULS	A,B		retrieve value to store
 	STD	,X
-* Useless label L00111 removed
+* Useless label L00112 removed
 * Line tolzbuf.c:34: for increment(s)
 	LDD	-10538,U
 	ADDD	#1
 	STD	-10538,U
-L00110	EQU	*
+L00111	EQU	*
 * Line tolzbuf.c:34: for condition
 	LDD	-10538,U	variable i
 	CMPD	#$0100
-	BLT	L00109
+	BLT	L00110
 * optim: branchToNextLocation
-* Useless label L00112 removed
+* Useless label L00113 removed
 * Line tolzbuf.c:39: function call: printf()
 	LDY	#$0D		optim: transformPshsXPshsX
 * optim: optimizePshsOps
@@ -317,7 +317,7 @@ L00110	EQU	*
 * optim: optimizePshsOps
 	LDD	#$0100		decimal 256 signed
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00089,PCR	"comparing %d values%c%c"
+	LEAX	S00090,PCR	"comparing %d values%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
@@ -330,8 +330,8 @@ L00110	EQU	*
 * optim: stripExtraClrA_B
 	CLRB
 	STD	-10538,U	variable i
-	BRA	L00114		jump to for condition
-L00113	EQU	*
+	BRA	L00115		jump to for condition
+L00114	EQU	*
 * Line tolzbuf.c:41: for body
 * Line tolzbuf.c:42: if
 	LDD	-10538,U	variable i
@@ -348,35 +348,35 @@ L00113	EQU	*
 * optimizeLoadDX
 	LDD	D,X		get r-value
 	CMPD	,S++
-	BEQ	L00118		 (optim: condBranchOverUncondBranch)
+	BEQ	L00119		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00117 removed
+* Useless label L00118 removed
 * Line tolzbuf.c:42
 * Line tolzbuf.c:43: assignment: =
 	CLRA
 	CLRB
 	STD	-5411,U
-	BRA	L00116		break
-L00118	EQU	*		else clause of if() started at tolzbuf.c:42
-* Useless label L00119 removed
-* Useless label L00115 removed
+	BRA	L00117		break
+L00119	EQU	*		else clause of if() started at tolzbuf.c:42
+* Useless label L00120 removed
+* Useless label L00116 removed
 * Line tolzbuf.c:41: for increment(s)
 	LDD	-10538,U
 	ADDD	#1
 	STD	-10538,U
-L00114	EQU	*
+L00115	EQU	*
 * Line tolzbuf.c:41: for condition
 	LDD	-10538,U	variable i
 	CMPD	#$0100
-	BLT	L00113
+	BLT	L00114
 * optim: branchToNextLocation
-L00116	EQU	*		end for
+L00117	EQU	*		end for
 * Line tolzbuf.c:47: if
 	LDD	-5411,U		variable `ja', declared at tolzbuf.c:40
 * optim: loadCmpZeroBeqOrBne
-	BEQ	L00121		 (optim: condBranchOverUncondBranch)
+	BEQ	L00122		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00120 removed
+* Useless label L00121 removed
 * Line tolzbuf.c:47
 * Line tolzbuf.c:47: function call: printf()
 	LDX	#$0D		optim: transformPshsDPshsD
@@ -384,12 +384,12 @@ L00116	EQU	*		end for
 	CLRA
 	LDB	#$0A		decimal 10 signed
 	PSHS	X,B,A		optim: optimizePshsOps
-	LEAX	S00090,PCR	"sch\xC3\xB6n%c%c"
+	LEAX	S00091,PCR	"sch\xC3\xB6n%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	6,S
-L00121	EQU	*		else clause of if() started at tolzbuf.c:47
-* Useless label L00122 removed
+L00122	EQU	*		else clause of if() started at tolzbuf.c:47
+* Useless label L00123 removed
 * Line tolzbuf.c:52: init of variable in
 	LDB	#$48		decimal 72 signed
 	STB	-5409,U		offset in variable in
@@ -467,7 +467,7 @@ L00121	EQU	*		else clause of if() started at tolzbuf.c:47
 * optim: optimizePshsOps
 	LDD	-5125,U		variable `csz', declared at tolzbuf.c:57
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00091,PCR	"csz=%d%c%c"
+	LEAX	S00092,PCR	"csz=%d%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
@@ -492,16 +492,16 @@ L00121	EQU	*		else clause of if() started at tolzbuf.c:47
 * optim: optimizePshsOps
 	LDD	-5123,U		variable `bsz', declared at tolzbuf.c:60
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00092,PCR	"bsz=%d%c%c"
+	LEAX	S00093,PCR	"bsz=%d%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
 * Line tolzbuf.c:63: if
 	LDD	-5127,U		variable osz
 	CMPD	-5123,U		variable bsz
-	BEQ	L00124		 (optim: condBranchOverUncondBranch)
+	BEQ	L00125		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00123 removed
+* Useless label L00124 removed
 * Line tolzbuf.c:63
 * Line tolzbuf.c:64: function call: printf()
 	LDX	#$0D		optim: transformPshsDPshsD
@@ -509,23 +509,23 @@ L00121	EQU	*		else clause of if() started at tolzbuf.c:47
 	CLRA
 	LDB	#$0A		decimal 10 signed
 	PSHS	X,B,A		optim: optimizePshsOps
-	LEAX	S00093,PCR	"Messages differ!%c%c"
+	LEAX	S00094,PCR	"Messages differ!%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	6,S
 * Line tolzbuf.c:65: return with value
 	CLRA
 	LDB	#$01		decimal 1 signed
-	LBRA	L00084		return (tolzbuf.c:65)
-L00124	EQU	*		else clause of if() started at tolzbuf.c:63
-* Useless label L00125 removed
+	LBRA	L00085		return (tolzbuf.c:65)
+L00125	EQU	*		else clause of if() started at tolzbuf.c:63
+* Useless label L00126 removed
 * Line tolzbuf.c:68: for init
 * Line tolzbuf.c:68: init of variable i
 	CLRA
 	CLRB
 	STD	-10538,U	variable i
-	BRA	L00127		jump to for condition
-L00126	EQU	*
+	BRA	L00128		jump to for condition
+L00127	EQU	*
 * Line tolzbuf.c:68: for body
 * Line tolzbuf.c:69: if
 	LDD	-10538,U	variable i
@@ -538,9 +538,9 @@ L00126	EQU	*
 * optimizeLoadDX
 	LDB	D,X		get r-value
 	CMPB	,S+		compare with LSB
-	BEQ	L00131		 (optim: condBranchOverUncondBranch)
+	BEQ	L00132		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00130 removed
+* Useless label L00131 removed
 * Line tolzbuf.c:69
 * Line tolzbuf.c:70: function call: printf()
 	LDY	#$0D		optim: transformPshsXPshsX
@@ -549,35 +549,35 @@ L00126	EQU	*
 * optim: optimizePshsOps
 	LDD	-10538,U	variable `i', declared at tolzbuf.c:68
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00094,PCR	"Messages differ at %d%c%c"
+	LEAX	S00095,PCR	"Messages differ at %d%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
 * Line tolzbuf.c:71: return with value
 	CLRA
 	LDB	#$01		decimal 1 signed
-	LBRA	L00084		return (tolzbuf.c:71)
-L00131	EQU	*		else clause of if() started at tolzbuf.c:69
-* Useless label L00132 removed
-* Useless label L00128 removed
+	LBRA	L00085		return (tolzbuf.c:71)
+L00132	EQU	*		else clause of if() started at tolzbuf.c:69
+* Useless label L00133 removed
+* Useless label L00129 removed
 * Line tolzbuf.c:68: for increment(s)
 	LDD	-10538,U
 	ADDD	#1
 	STD	-10538,U
-L00127	EQU	*
+L00128	EQU	*
 * Line tolzbuf.c:68: for condition
 	LDD	-10538,U	variable i
 	CMPD	-5123,U		variable bsz
-	BLT	L00126
+	BLT	L00127
 * optim: branchToNextLocation
-* Useless label L00129 removed
+* Useless label L00130 removed
 * Line tolzbuf.c:74: function call: printf()
 	LDX	#$0D		optim: transformPshsDPshsD
 * optim: optimizePshsOps
 	CLRA
 	LDB	#$0A		decimal 10 signed
 	PSHS	X,B,A		optim: optimizePshsOps
-	LEAX	S00095,PCR	"All good!%c%c"
+	LEAX	S00096,PCR	"All good!%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	6,S
@@ -592,7 +592,7 @@ L00127	EQU	*
 	PSHS	B,A		argument 3 of printf(): int
 	LDD	#$0400		decimal 1024 signed
 	PSHS	B,A		argument 2 of printf(): int
-	LEAX	S00096,PCR	"filling a %d repetitive buffer%c%c"
+	LEAX	S00097,PCR	"filling a %d repetitive buffer%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
@@ -601,8 +601,8 @@ L00127	EQU	*
 	CLRA
 	CLRB
 	STD	-10538,U	variable i
-	BRA	L00134		jump to for condition
-L00133	EQU	*
+	BRA	L00135		jump to for condition
+L00134	EQU	*
 * Line tolzbuf.c:84: for body
 * Line tolzbuf.c:85: if
 	LDX	-10538,U	left
@@ -610,19 +610,19 @@ L00133	EQU	*
 	LDB	#$14		right
 	LBSR	SDIV16
 	ADDD	#0
-	BNE	L00138		 (optim: condBranchOverUncondBranch)
+	BNE	L00139		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00137 removed
+* Useless label L00138 removed
 * Line tolzbuf.c:85
 * Line tolzbuf.c:86: post-increment
 	INC	-1,U
 * Line tolzbuf.c:87: function call: printf()
-	LEAX	S00097,PCR	"+"
+	LEAX	S00098,PCR	"+"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	2,S
-L00138	EQU	*		else clause of if() started at tolzbuf.c:85
-* Useless label L00139 removed
+L00139	EQU	*		else clause of if() started at tolzbuf.c:85
+* Useless label L00140 removed
 * Line tolzbuf.c:89: assignment: =
 	LDB	-1,U		variable `ch', declared at tolzbuf.c:82
 	PSHS	B
@@ -631,25 +631,25 @@ L00138	EQU	*		else clause of if() started at tolzbuf.c:85
 	LEAX	D,X		add offset
 	LDB	,S+
 	STB	,X
-* Useless label L00135 removed
+* Useless label L00136 removed
 * Line tolzbuf.c:84: for increment(s)
 	LDD	-10538,U
 	ADDD	#1
 	STD	-10538,U
-L00134	EQU	*
+L00135	EQU	*
 * Line tolzbuf.c:84: for condition
 	LDD	-10538,U	variable i
 	CMPD	#$0400
-	BLT	L00133
+	BLT	L00134
 * optim: branchToNextLocation
-* Useless label L00136 removed
+* Useless label L00137 removed
 * Line tolzbuf.c:91: function call: printf()
 	LDX	#$0D		optim: transformPshsDPshsD
 * optim: optimizePshsOps
 	CLRA
 	LDB	#$0A		decimal 10 signed
 	PSHS	X,B,A		optim: optimizePshsOps
-	LEAX	S00098,PCR	"%c%c"
+	LEAX	S00099,PCR	"%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	6,S
@@ -660,7 +660,7 @@ L00134	EQU	*
 * optim: optimizePshsOps
 	LDD	#$0400		decimal 1024 signed
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00099,PCR	"compressing %d repetitive buffer%c%c"
+	LEAX	S00100,PCR	"compressing %d repetitive buffer%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
@@ -684,7 +684,7 @@ L00134	EQU	*
 * optim: optimizePshsOps
 	LDD	-5125,U		variable `csz', declared at tolzbuf.c:57
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00100,PCR	"compressed size: %d%c%c"
+	LEAX	S00101,PCR	"compressed size: %d%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
@@ -708,16 +708,16 @@ L00134	EQU	*
 * optim: optimizePshsOps
 	LDD	-5123,U		variable `bsz', declared at tolzbuf.c:60
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00092,PCR	"bsz=%d%c%c"
+	LEAX	S00093,PCR	"bsz=%d%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
 * Line tolzbuf.c:99: if
 	LDD	-5123,U		variable `bsz', declared at tolzbuf.c:60
 	CMPD	#1024
-	BEQ	L00141		 (optim: condBranchOverUncondBranch)
+	BEQ	L00142		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00140 removed
+* Useless label L00141 removed
 * Line tolzbuf.c:99
 * Line tolzbuf.c:100: function call: printf()
 	LDX	#$0D		optim: transformPshsDPshsD
@@ -725,23 +725,23 @@ L00134	EQU	*
 	CLRA
 	LDB	#$0A		decimal 10 signed
 	PSHS	X,B,A		optim: optimizePshsOps
-	LEAX	S00093,PCR	"Messages differ!%c%c"
+	LEAX	S00094,PCR	"Messages differ!%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	6,S
 * Line tolzbuf.c:101: return with value
 	CLRA
 	LDB	#$01		decimal 1 signed
-	LBRA	L00084		return (tolzbuf.c:101)
-L00141	EQU	*		else clause of if() started at tolzbuf.c:99
-* Useless label L00142 removed
+	LBRA	L00085		return (tolzbuf.c:101)
+L00142	EQU	*		else clause of if() started at tolzbuf.c:99
+* Useless label L00143 removed
 * Line tolzbuf.c:104: for init
 * Line tolzbuf.c:104: init of variable i
 	CLRA
 	CLRB
 	STD	-10538,U	variable i
-	BRA	L00144		jump to for condition
-L00143	EQU	*
+	BRA	L00145		jump to for condition
+L00144	EQU	*
 * Line tolzbuf.c:104: for body
 * Line tolzbuf.c:105: if
 	LDD	-10538,U	variable i
@@ -754,9 +754,9 @@ L00143	EQU	*
 * optimizeLoadDX
 	LDB	D,X		get r-value
 	CMPB	,S+		compare with LSB
-	BEQ	L00148		 (optim: condBranchOverUncondBranch)
+	BEQ	L00149		 (optim: condBranchOverUncondBranch)
 * optim: condBranchOverUncondBranch
-* Useless label L00147 removed
+* Useless label L00148 removed
 * Line tolzbuf.c:105
 * Line tolzbuf.c:106: function call: printf()
 	LDY	#$0D		optim: transformPshsXPshsX
@@ -765,35 +765,35 @@ L00143	EQU	*
 * optim: optimizePshsOps
 	LDD	-10538,U	variable `i', declared at tolzbuf.c:104
 	PSHS	Y,X,B,A		optim: optimizePshsOps
-	LEAX	S00094,PCR	"Messages differ at %d%c%c"
+	LEAX	S00095,PCR	"Messages differ at %d%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	8,S
 * Line tolzbuf.c:107: return with value
 	CLRA
 	LDB	#$01		decimal 1 signed
-	BRA	L00084		return (tolzbuf.c:107)
-L00148	EQU	*		else clause of if() started at tolzbuf.c:105
-* Useless label L00149 removed
-* Useless label L00145 removed
+	BRA	L00085		return (tolzbuf.c:107)
+L00149	EQU	*		else clause of if() started at tolzbuf.c:105
+* Useless label L00150 removed
+* Useless label L00146 removed
 * Line tolzbuf.c:104: for increment(s)
 	LDD	-10538,U
 	ADDD	#1
 	STD	-10538,U
-L00144	EQU	*
+L00145	EQU	*
 * Line tolzbuf.c:104: for condition
 	LDD	-10538,U	variable i
 	CMPD	-5123,U		variable bsz
-	BLT	L00143
+	BLT	L00144
 * optim: branchToNextLocation
-* Useless label L00146 removed
+* Useless label L00147 removed
 * Line tolzbuf.c:110: function call: printf()
 	LDX	#$0D		optim: transformPshsDPshsD
 * optim: optimizePshsOps
 	CLRA
 	LDB	#$0A		decimal 10 signed
 	PSHS	X,B,A		optim: optimizePshsOps
-	LEAX	S00095,PCR	"All good!%c%c"
+	LEAX	S00096,PCR	"All good!%c%c"
 	PSHS	X		argument 1 of printf(): const char[]
 	LBSR	_printf
 	LEAS	6,S
@@ -801,7 +801,7 @@ L00144	EQU	*
 	CLRA
 	CLRB
 * optim: branchToNextLocation
-L00084	EQU	*		end of main()
+L00085	EQU	*		end of main()
 	LEAS	,U
 	PULS	U,PC
 * END FUNCTION main(): defined at tolzbuf.c:5
@@ -900,55 +900,55 @@ string_literals_start	EQU	*
 *******************************************************************************
 
 * STRING LITERALS
-S00085	EQU	*
+S00086	EQU	*
 	FCC	"randomizing %d values%c%c"
 	FCB	0
-S00086	EQU	*
+S00087	EQU	*
 	FCB	$0A
 	FCB	0
-S00087	EQU	*
+S00088	EQU	*
 	FCC	"writing %d values%c%c"
 	FCB	0
-S00088	EQU	*
+S00089	EQU	*
 	FCC	"reading %d values%c%c"
 	FCB	0
-S00089	EQU	*
+S00090	EQU	*
 	FCC	"comparing %d values%c%c"
 	FCB	0
-S00090	EQU	*
+S00091	EQU	*
 	FCC	"sch"
 	FCB	$C3
 	FCB	$B6
 	FCC	"n%c%c"
 	FCB	0
-S00091	EQU	*
+S00092	EQU	*
 	FCC	"csz=%d%c%c"
 	FCB	0
-S00092	EQU	*
+S00093	EQU	*
 	FCC	"bsz=%d%c%c"
 	FCB	0
-S00093	EQU	*
+S00094	EQU	*
 	FCC	"Messages differ!%c%c"
 	FCB	0
-S00094	EQU	*
+S00095	EQU	*
 	FCC	"Messages differ at %d%c%c"
 	FCB	0
-S00095	EQU	*
+S00096	EQU	*
 	FCC	"All good!%c%c"
 	FCB	0
-S00096	EQU	*
+S00097	EQU	*
 	FCC	"filling a %d repetitive buffer%c%c"
 	FCB	0
-S00097	EQU	*
+S00098	EQU	*
 	FCC	"+"
 	FCB	0
-S00098	EQU	*
+S00099	EQU	*
 	FCC	"%c%c"
 	FCB	0
-S00099	EQU	*
+S00100	EQU	*
 	FCC	"compressing %d repetitive buffer%c%c"
 	FCB	0
-S00100	EQU	*
+S00101	EQU	*
 	FCC	"compressed size: %d%c%c"
 	FCB	0
 string_literals_end	EQU	*

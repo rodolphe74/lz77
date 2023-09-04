@@ -31,16 +31,35 @@
 #define CHAR_BIT_SIZE 8
 
 
-// global array use for knuthMorrisPratt search
-// should be >= the size of window search
-#define KMP_LPS_SIZE 63
-extern INT lps[KMP_LPS_SIZE];
-
 
 #ifdef COMPILER_IS_CMOC
-#define MATCH_STRING_FUNC knuthMorrisPrattSearch
+// even if all searches work on Thomson CMOC,
+// try to avoid memory boyerMooreSearch
+// & knuthMorrisPrattSearch memory overhead
+#define MATCH_STRING_FUNC bruteForceSearchOptim
 #else
-#define MATCH_STRING_FUNC knuthMorrisPrattSearch
+#define MATCH_STRING_FUNC boyerMooreSearch
+#endif
+
+
+
+// global array used for knuthMorrisPratt search
+// should be >= the size of window search
+#ifndef COMPILER_IS_CMOC
+#define KMP_LPS_SIZE 63
+extern INT lps[KMP_LPS_SIZE];
+#endif
+
+
+// globals used for boyerMoore search
+// bad suffix
+#ifndef COMPILER_IS_CMOC
+#define BM_XSIZE 256
+// good suffix should be >= the size of window search
+#define BM_ASIZE 63
+#define MAX(a,b) (a>b?a:b)
+extern INT bmBc[BM_XSIZE];
+extern INT bmGs[BM_ASIZE];
 #endif
 
 
@@ -50,11 +69,7 @@ extern UCHAR dicBitSize;
 extern UINT aheadSize;
 extern UCHAR aheadBitSize;
 
-// struct tupleStruct {
-//     UCHAR d;
-//     UCHAR l;
-//     UCHAR c;
-// };
+
 struct tupleStruct {
     UINT d;
     UINT l;
@@ -100,6 +115,7 @@ void initBitField(BitField *bf, UCHAR *buf);
 INT bruteForceSearch(UCHAR *x, INT m, UCHAR *y, INT n);
 INT bruteForceSearchOptim(UCHAR *x, INT m, UCHAR *y, INT n);
 INT karpRabinSearch(UCHAR *x, INT m, UCHAR *y, INT n);
+INT boyerMooreSearch(UCHAR *x, INT m, UCHAR *y, INT n);
 // https://www.geeksforgeeks.org/kmp-algorithm-for-pattern-searching/
 INT knuthMorrisPrattSearch(UCHAR *x, INT m, UCHAR *y, INT n);
 

@@ -5,8 +5,8 @@
 int main(/*int argc, char *argv[]*/)
 {
 
-    // initParameters(511, 9, 15, 4);
-    initParameters(127, 7, 15, 4);
+    initParameters(511, 9, 15, 4);
+    // initParameters(127, 7, 15, 4);
 
     // Test bits
 #define VAL_COUNT 256

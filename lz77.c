@@ -11,16 +11,24 @@ UCHAR dicBitSize;
 UINT dicSize;
 UCHAR aheadBitSize;
 UINT aheadSize;
+// Thomson TO8 memory is a critical resource
+#ifndef COMPILER_IS_CMOC
 INT lps[KMP_LPS_SIZE];  // WARNING multithread search
+INT bmBc[BM_XSIZE];
+INT bmGs[BM_ASIZE];
+#endif
 
-
-void initDefaultParameters()
+void initDefaultParameters(void)
 {
     dicSize = DIC_SIZE;
     dicBitSize = DIC_BIT_SIZE;
     aheadSize = AHEAD_SIZE;
     aheadBitSize = AHEAD_BIT_SIZE;
+#ifndef COMPILER_IS_CMOC
     memset(lps, 0, KMP_LPS_SIZE * sizeof(INT));
+    memset(bmBc, 0, BM_XSIZE * sizeof(INT));
+    memset(bmGs, 0, BM_ASIZE * sizeof(INT));
+#endif
 }
 
 void initParameters(UINT dsz, UCHAR bdsz, UINT asz, UCHAR basz)
@@ -29,7 +37,11 @@ void initParameters(UINT dsz, UCHAR bdsz, UINT asz, UCHAR basz)
     dicBitSize = bdsz;
     aheadSize = asz;
     aheadBitSize = basz;
+#ifndef COMPILER_IS_CMOC
     memset(lps, 0, KMP_LPS_SIZE * sizeof(INT));
+    memset(bmBc, 0, BM_XSIZE * sizeof(INT));
+    memset(bmGs, 0, BM_ASIZE * sizeof(INT));
+#endif
 }
 
 void initBitField(BitField *bf, UCHAR *buf)
@@ -88,19 +100,7 @@ UINT readbits(BitField *bf, UCHAR bitCount)
 }
 
 
-// INT bruteForceSearch(UCHAR *x, UINT m, UCHAR *y, UINT n)
-// {
-//     printf("m=%d n=%d%c%c", m, n, 10, 13);
-//
-//     UINT i, j;
-//     /* Searching */
-//     for (j = 0; j <= n - m; ++j) {
-//         for (i = 0; i < m && x[i] == y[i + j]; ++i);
-//         if (i >= m)
-//             return j;
-//     }
-//     return -1;
-// }
+
 
 INT bruteForceSearch(UCHAR *x, INT m, UCHAR *y, INT n)
 {
@@ -163,6 +163,85 @@ INT karpRabinSearch(UCHAR *x, INT m, UCHAR *y, INT n)
 
 
 
+// Thomson TO8 memory is a critical resource
+#ifndef COMPILER_IS_CMOC
+// Boyer-Moore helpers
+void
+preBmBc(UCHAR *x, INT m, INT bmBc[])
+{
+    INT i;
+    for (i = 0; i < BM_XSIZE; ++i)
+        bmBc[i] = m;
+    for (i = 0; i < m - 1; ++i)
+        bmBc[(size_t)x[i]] = m - i - 1;
+}
+
+void
+suffixes(UCHAR *x, INT m, INT *suff)
+{
+    INT f = 0, g, i;
+
+    suff[m - 1] = m;
+    g = m - 1;
+    for (i = m - 2; i >= 0; --i) {
+        if (i > g && suff[i + m - 1 - f] < i - g)
+            suff[i] = suff[i + m - 1 - f];
+        else {
+            if (i < g)
+                g = i;
+            f = i;
+            while (g >= 0 && x[g] == x[g + m - 1 - f])
+                --g;
+            suff[i] = f - g;
+        }
+    }
+}
+
+void
+preBmGs(UCHAR *x, INT m, INT bmGs[])
+{
+    INT i, j, suff[BM_ASIZE];
+
+    suffixes(x, m, suff);
+
+    for (i = 0; i < m; ++i)
+        bmGs[i] = m;
+    j = 0;
+    for (i = m - 1; i >= 0; --i)
+        if (suff[i] == i + 1)
+            for (; j < m - 1 - i; ++j)
+                if (bmGs[j] == m)
+                    bmGs[j] = m - 1 - i;
+    for (i = 0; i <= m - 2; ++i)
+        bmGs[m - 1 - suff[i]] = m - 1 - i;
+}
+
+INT boyerMooreSearch(UCHAR *x, INT m, UCHAR *y, INT n)
+{
+    INT i, j;
+
+    /* Preprocessing */
+    preBmGs(x, m, bmGs);
+    preBmBc(x, m, bmBc);
+
+    /* Searching */
+    j = 0;
+    while (j <= n - m) {
+        for (i = m - 1; i >= 0 && x[i] == y[i + j]; --i);
+        if (i < 0) {
+            return j;
+        } else
+            j += MAX(bmGs[i], bmBc[y[i + j]] - m + 1 + i);
+    }
+    return -1;
+}
+#endif
+
+
+
+// Thomson TO8 memory is a critical resource
+#ifndef COMPILER_IS_CMOC
+// KMP helper
 // Fills lps[] for given pattern pat[0..M-1]
 // lps[i] = the longest proper prefix of pat[0..i] which is also a suffix of pat[0..i].
 // sample : “AABAACAABAA”, lps[] is [0, 1, 0, 1, 2, 0, 1, 2, 3, 4, 5]
@@ -234,7 +313,7 @@ INT knuthMorrisPrattSearch(UCHAR *x, INT m, UCHAR *y, INT n)
     }
     return -1;
 }
-
+#endif
 
 
 Tuple findInDic(UCHAR *input, UINT inputSize,  UINT startDicIndex, UINT stopDicIndex, UINT startAHead, UINT aHeadSize)
@@ -513,5 +592,3 @@ void uncompressFile(FILE *fin, FILE *fout)
 }
 
 #endif
-
-
