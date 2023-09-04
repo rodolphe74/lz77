@@ -2,14 +2,14 @@
 // #include "images/beast00077.h"
 // #include "images/nimoy0077.h"
 // #include "images/fouAPi0077.h"
-// #include "images/arton50077.h"
+#include "images/arton50077.h"
 // #include "images/arton40077.h"
-#include "images/artonb0077.h"
+// #include "images/artonb0077.h"
 
 // #define INPUT_SIZE 1024
 // #define OUTPUT_SIZE 1024
 
-#define STRUCT_NAME artonb00
+#define STRUCT_NAME arton500
 
 // set 160*200*16
 void _160()

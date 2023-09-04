@@ -100,8 +100,8 @@ UINT readbits(BitField *bf, UCHAR bitCount)
 }
 
 
-
-
+// Thomson TO8 memory is a critical resource
+#ifndef COMPILER_IS_CMOC
 INT bruteForceSearch(UCHAR *x, INT m, UCHAR *y, INT n)
 {
     INT i, j;
@@ -113,7 +113,10 @@ INT bruteForceSearch(UCHAR *x, INT m, UCHAR *y, INT n)
     }
     return -1;
 }
+#endif
 
+// Thomson TO8 memory is a critical resource
+// keep only used string search when CMOC
 INT bruteForceSearchOptim(UCHAR *x, INT m, UCHAR *y, INT n)
 {
     UCHAR *yb;
@@ -127,17 +130,18 @@ INT bruteForceSearchOptim(UCHAR *x, INT m, UCHAR *y, INT n)
     return -1;
 }
 
+// Thomson TO8 memory is a critical resource
+#ifndef COMPILER_IS_CMOC
 // rehash(a,b,h)= ((h-a*2m-1)*2+b) mod q
 #define REHASH(a, b, h) ((((h) - (a)*d) << 1) + (b))
 INT karpRabinSearch(UCHAR *x, INT m, UCHAR *y, INT n)
 {
-
-#ifdef COMPILER_IS_CMOC
-    INT d, hx, hy, i, j;
-#else
+// #ifdef COMPILER_IS_CMOC
+//     INT d, hx, hy, i, j;
+// #else
     // faster on signed int (gcc linux)
     INT32 d, hx, hy, i, j;
-#endif
+// #endif
 
     // Preprocessing
     // computes d = 2^(m-1) with
@@ -160,7 +164,7 @@ INT karpRabinSearch(UCHAR *x, INT m, UCHAR *y, INT n)
     }
     return -1;
 }
-
+#endif
 
 
 // Thomson TO8 memory is a critical resource
