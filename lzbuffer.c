@@ -13,8 +13,8 @@
 
 int main(int argc, char *argv[])
 {
-    initDefaultParameters();
-    // initParameters(511, 9, 15, 4);
+    // initDefaultParameters();
+    initParameters(2047, 11, 127, 7);
 
     // sample buffer compression test
     UCHAR in[] = {'H', 'e', 'l', 'l', 'o', ' ', 'f', 'r', 'i', 'e', 'n', 'd', 's', ',', ' ', 'H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'};
